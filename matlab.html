@@ -3,172 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MATLAB R2022b - academic use</title>
+    <title>MATLAB R2024b - Premium Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        /* CSS Reset & Variables */
         :root {
-            --matlab-bg: #f0f0f0;
-            --panel-bg: #ffffff;
-            --border-light: #cccccc;
-            --border-dark: #999999;
-            --text-main: #000000;
-            --tab-active: #ffffff;
-            --tab-hover: #e5f1fb;
-            --accent-blue: #005696;
-            --code-font: Consolas, "Courier New", monospace;
+            --bg-base: #0f172a;
+            --bg-panel: #1e293b;
+            --bg-ribbon: #1e293b;
+            --border-color: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #0ea5e9;
+            --accent-green: #22c55e;
+            --hover-bg: rgba(255, 255, 255, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --font-ui: 'Inter', system-ui, sans-serif;
+            --font-code: 'Fira Code', monospace;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body, html { height: 100vh; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: var(--matlab-bg); overflow: hidden; font-size: 12px; color: var(--text-main); }
-
-        /* Main Application Grid */
-        .app-window {
-            display: grid;
-            grid-template-rows: 25px 95px 30px calc(100vh - 150px);
-            height: 100vh;
-            border: 1px solid var(--border-dark);
+        body { 
+            height: 100vh; 
+            font-family: var(--font-ui); 
+            background: linear-gradient(135deg, #0f172a, #1e1b4b); 
+            color: var(--text-main); 
+            overflow: hidden; 
+            font-size: 13px;
         }
 
-        /* 1. Title Bar */
+        .app-window { display: flex; flex-direction: column; height: 100vh; }
+
+        /* Title Bar */
         .title-bar {
-            background: linear-gradient(to bottom, #eaeaea, #d4d4d4);
-            border-bottom: 1px solid var(--border-dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
+            height: 36px;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 500; color: var(--text-muted);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
             position: relative;
         }
-        .window-controls { position: absolute; right: 5px; display: flex; gap: 4px; }
-        .window-btn { width: 14px; height: 14px; border: 1px solid #aaa; background: #eee; border-radius: 50%; }
+        .window-controls { position: absolute; left: 16px; display: flex; gap: 8px; }
+        .mac-btn { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; transition: transform 0.2s; }
+        .mac-btn:hover { transform: scale(1.15); }
+        .mac-close { background: #ff5f56; }
+        .mac-min { background: #ffbd2e; }
+        .mac-max { background: #27c93f; }
 
-        /* 2. Ribbon Area */
-        .ribbon-container { background: #f5f6f7; border-bottom: 1px solid var(--border-dark); display: flex; flex-direction: column; }
-        .tabs { display: flex; padding-top: 5px; padding-left: 10px; border-bottom: 1px solid var(--border-light); background: #e1eaf5; }
-        .tab { padding: 4px 15px; margin-right: 2px; border: 1px solid transparent; cursor: pointer; border-top-left-radius: 3px; border-top-right-radius: 3px; }
-        .tab.active { background: var(--tab-active); border-color: var(--border-light); border-bottom-color: #fff; margin-bottom: -1px; border-top: 3px solid var(--accent-blue); font-weight: bold; }
+        /* Ribbon */
+        .ribbon-container {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex; flex-direction: column;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        .tabs { display: flex; padding: 0 20px; background: rgba(0,0,0,0.2); }
+        .tab {
+            padding: 12px 24px; font-size: 12px; font-weight: 600;
+            color: var(--text-muted); border-bottom: 2px solid transparent;
+            cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .tab:hover { color: var(--text-main); background: var(--hover-bg); }
+        .tab.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); }
+
+        .toolbar { display: flex; padding: 12px 20px; gap: 32px; }
+        .tool-group {
+            display: flex; align-items: center; gap: 8px;
+            padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.1);
+            position: relative; padding-bottom: 12px;
+        }
+        .tool-group:last-child { border-right: none; }
+        .tool-group-title {
+            position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%);
+            font-size: 10px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase;
+        }
+        .tool-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 8px 12px; border-radius: 8px; cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-main); gap: 6px; border: 1px solid transparent;
+        }
+        .tool-btn:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .tool-btn:active { transform: translateY(0); }
+        .tool-btn svg {
+            width: 26px; height: 26px; fill: none; stroke: currentColor;
+            stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.2s;
+        }
+        .tool-btn.run-btn { color: var(--accent-green); }
+        .tool-btn.run-btn:hover { background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.2); }
+        .tool-btn.run-btn svg { stroke: var(--accent-green); fill: rgba(34, 197, 94, 0.15); }
         
-        .toolbar { flex: 1; background: #fff; display: flex; align-items: center; padding: 0 10px; gap: 15px; }
-        .tool-group { display: flex; align-items: center; gap: 5px; border-right: 1px solid #ddd; padding-right: 15px; height: 100%; position: relative; padding-bottom: 12px;}
-        .tool-group-title { position: absolute; bottom: 2px; font-size: 9px; color: #666; width: 100%; text-align: center; }
-        .tool-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; padding: 4px; border: 1px solid transparent; }
-        .tool-btn:hover { background: var(--tab-hover); border-color: #99c1e7; }
-        .icon-large { width: 32px; height: 32px; background: #eaeaea; margin-bottom: 4px; border-radius: 3px; }
+        .tool-btn.copy-btn { color: var(--accent-blue); }
+        .tool-btn.copy-btn:hover { background: rgba(14, 165, 233, 0.1); border-color: rgba(14, 165, 233, 0.2); }
 
-        /* 3. Path Bar */
-        .path-bar { background: var(--panel-bg); border-bottom: 1px solid var(--border-light); display: flex; align-items: center; padding: 0 10px; }
-        .path-input { border: 1px solid var(--border-light); padding: 2px 5px; flex-grow: 1; margin-left: 10px; font-family: inherit; font-size: 12px; }
+        /* Path Bar */
+        .path-bar {
+            display: flex; align-items: center; padding: 10px 20px;
+            background: rgba(30, 41, 59, 0.6); border-bottom: 1px solid var(--border-color); gap: 12px;
+        }
+        .path-input {
+            flex-grow: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color);
+            border-radius: 8px; padding: 8px 16px; color: var(--text-main);
+            font-family: var(--font-code); font-size: 13px; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .path-input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2); }
 
-        /* 4. Main Workspace */
-        .workspace { display: grid; grid-template-columns: 220px 1fr 250px; gap: 4px; padding: 4px; background: #d0d0d0; height: 100%; overflow: hidden;}
+        /* Workspace */
+        .workspace { display: grid; grid-template-columns: 280px 1fr 320px; gap: 16px; padding: 16px; height: calc(100vh - 170px); }
 
         /* Panels */
-        .panel { background: var(--panel-bg); border: 1px solid var(--border-dark); display: flex; flex-direction: column; overflow: hidden; }
-        .panel-header { background: #e5f1fb; padding: 4px 8px; border-bottom: 1px solid var(--border-light); font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
-        
+        .panel {
+            background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px);
+            border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);
+            display: flex; flex-direction: column; overflow: hidden; box-shadow: var(--shadow-md);
+            transition: border-color 0.3s;
+        }
+        .panel:hover { border-color: rgba(255,255,255,0.15); }
+        .panel-header {
+            padding: 14px 16px; font-weight: 600; font-size: 13px;
+            color: var(--text-main); border-bottom: 1px solid rgba(255,255,255,0.08);
+            display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2);
+        }
+        .panel-header span { color: var(--text-muted); font-weight: 400; font-size: 12px; }
+
         /* File Explorer */
-        .folder-list { padding: 5px; list-style: none; overflow-y: auto; flex: 1; }
-        .folder-list li { display: flex; align-items: center; padding: 4px 5px; cursor: pointer; user-select: none; }
-        .folder-list li:hover { background: #e5f1fb; }
-        .folder-list li.active-file { background: #cce8ff; border: 1px solid #99c1e7; padding: 3px 4px; }
-        .file-icon { width: 14px; height: 16px; background: #fff; border: 1px solid #005696; margin-right: 8px; position: relative; }
-        .file-icon::after { content: ''; position: absolute; top: 0; right: 0; border-width: 0 4px 4px 0; border-style: solid; border-color: transparent #fff #005696 transparent; }
+        .folder-list { padding: 10px; list-style: none; overflow-y: auto; flex: 1; }
+        .folder-list li {
+            display: flex; align-items: center; padding: 10px 14px; margin-bottom: 4px;
+            border-radius: 8px; cursor: pointer; transition: all 0.2s; color: var(--text-muted); font-size: 13px;
+        }
+        .folder-list li:hover { background: rgba(255,255,255,0.06); color: var(--text-main); transform: translateX(2px); }
+        .folder-list li.active-file { background: rgba(14, 165, 233, 0.15); color: var(--accent-blue); font-weight: 500; border-left: 3px solid var(--accent-blue); }
+        .file-icon { width: 18px; height: 18px; margin-right: 12px; fill: none; stroke: currentColor; stroke-width: 1.5; }
 
-        /* Editor */
-        .center-col { display: grid; grid-template-rows: 60% 1fr; gap: 4px; height: 100%; min-height: 0; }
-        .editor-area { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
-        .editor-tabs { display: flex; background: #f0f0f0; border-bottom: 1px solid #ccc; }
-        .e-tab { padding: 4px 20px; background: #fff; border-right: 1px solid #ccc; font-style: italic; font-weight: bold; }
+        /* Editor Area */
+        .center-col { display: grid; grid-template-rows: 2fr 1fr; gap: 16px; height: 100%; min-height: 0; }
+        .editor-tabs { display: flex; background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.05); padding-top: 8px; padding-left: 12px; }
+        .e-tab {
+            padding: 10px 20px; background: rgba(30, 41, 59, 0.9);
+            border-radius: 8px 8px 0 0; border: 1px solid rgba(255,255,255,0.08); border-bottom: none;
+            color: var(--accent-blue); font-family: var(--font-ui); font-size: 13px; font-weight: 500;
+            display: flex; align-items: center; gap: 10px; position: relative; top: 1px;
+        }
         
-        .editor-content { display: flex; flex: 1; overflow: auto; background: #fff; font-family: var(--code-font); font-size: 13px; }
-        .line-numbers { background: #f0f0f0; color: #666; padding: 5px; text-align: right; border-right: 1px solid #ddd; user-select: none; min-width: 40px; }
-        .code-input { padding: 5px 10px; white-space: pre; outline: none; flex: 1; overflow: visible; }
-        
-        /* Syntax Colors */
-        .c-comment { color: #228B22; }
-        .c-string { color: #A020F0; }
-        .c-keyword { color: #0000FF; }
-        
+        .editor-content {
+            display: flex; flex: 1; overflow: auto; background: #0d1117; 
+            font-family: var(--font-code); font-size: 14px; line-height: 1.6;
+        }
+        .line-numbers {
+            background: #0d1117; color: #484f58; padding: 16px 14px; text-align: right;
+            border-right: 1px solid #30363d; user-select: none; min-width: 55px;
+        }
+        .code-input { padding: 16px 20px; white-space: pre; outline: none; flex: 1; color: #c9d1d9; overflow-x: auto; tab-size: 4; }
+
+        /* Syntax Highlight */
+        .c-comment { color: #8b949e; font-style: italic; }
+        .c-string { color: #a5d6ff; }
+        .c-keyword { color: #ff7b72; font-weight: 500; }
+        .c-func { color: #d2a8ff; }
+
         /* Command Window */
-        .cmd-window { padding: 10px; font-family: var(--code-font); font-size: 13px; overflow-y: auto; flex: 1; }
-        .cmd-line { display: flex; align-items: center; margin-top: 5px; }
-        .prompt { font-weight: bold; margin-right: 5px; }
-        .prompt-input { border: none; outline: none; font-family: var(--code-font); font-size: 13px; flex: 1; }
-
+        .cmd-window { padding: 16px 20px; font-family: var(--font-code); font-size: 14px; overflow-y: auto; flex: 1; background: #0d1117; color: #c9d1d9; }
+        .cmd-line { display: flex; align-items: center; margin-top: 10px; }
+        .prompt { color: var(--accent-green); font-weight: 600; margin-right: 12px; user-select: none; }
+        .prompt-input { border: none; outline: none; background: transparent; color: #c9d1d9; font-family: var(--font-code); font-size: 14px; flex: 1; }
+        .cmd-msg { margin-bottom: 6px; }
+        
         /* Workspace Table */
-        .workspace-table { width: 100%; border-collapse: collapse; text-align: left; }
-        .workspace-table th { background: #f5f5f5; border-bottom: 1px solid #ddd; padding: 4px 5px; font-weight: normal; }
-        .workspace-table td { padding: 4px 5px; border-bottom: 1px solid #eee; }
-        .var-icon { display: inline-block; width: 14px; height: 14px; background: #ffd700; border: 1px solid #b8860b; margin-right: 5px; vertical-align: middle; }
+        .workspace-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+        .workspace-table th { background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.05); padding: 10px 16px; color: var(--text-muted); font-weight: 500; }
+        .workspace-table td { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.03); color: var(--text-main); }
+        .workspace-table tr:hover td { background: rgba(255,255,255,0.04); }
+        .var-icon {
+            display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px;
+            background: rgba(234, 179, 8, 0.15); color: #fde047; border-radius: 6px;
+            margin-right: 12px; vertical-align: middle; font-size: 11px; font-family: var(--font-code);
+            border: 1px solid rgba(234, 179, 8, 0.3); font-weight: bold;
+        }
+
+        ::-webkit-scrollbar { width: 12px; height: 12px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border: 3px solid transparent; background-clip: padding-box; border-radius: 6px; }
+        ::-webkit-scrollbar-thumb:hover { background-color: rgba(255,255,255,0.2); }
     </style>
 </head>
 <body>
 
 <div class="app-window">
     <div class="title-bar">
-        MATLAB R2022b - academic use
         <div class="window-controls">
-            <div class="window-btn"></div><div class="window-btn"></div><div class="window-btn"></div>
+            <div class="mac-btn mac-close"></div><div class="mac-btn mac-min"></div><div class="mac-btn mac-max"></div>
         </div>
+        MATLAB R2024b - Premium Edition
     </div>
 
     <div class="ribbon-container">
         <div class="tabs">
-            <div class="tab">HOME</div><div class="tab">PLOTS</div><div class="tab">APPS</div><div class="tab active">EDITOR</div><div class="tab">PUBLISH</div><div class="tab">VIEW</div>
+            <div class="tab">Home</div><div class="tab">Plots</div><div class="tab">Apps</div><div class="tab active">Editor</div><div class="tab">View</div>
         </div>
         <div class="toolbar">
             <div class="tool-group">
-                <div class="tool-btn"><div class="icon-large" style="background: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23ffd700%22><path d=%22M3 3h18v18H3z%22/></svg>') no-repeat center/cover;"></div>New</div>
-                <div class="tool-btn"><div class="icon-large"></div>Open</div>
-                <div class="tool-btn"><div class="icon-large"></div>Save</div>
-                <span class="tool-group-title">FILE</span>
+                <div class="tool-btn"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>New</div>
+                <div class="tool-btn"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>Open</div>
+                <div class="tool-btn"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>Save</div>
+                <span class="tool-group-title">File</span>
             </div>
             <div class="tool-group">
-                <div class="tool-btn" onclick="copyCurrentCode()"><div class="icon-large" style="background: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23005696%22><path d=%22M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z%22/></svg>') no-repeat center/cover; background-size: 20px; background-color: #eaeaea; background-position: center;"></div>Copy</div>
-                <span class="tool-group-title">EDIT</span>
+                <div class="tool-btn copy-btn" onclick="copyCurrentCode()"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>Copy</div>
+                <span class="tool-group-title">Edit</span>
             </div>
             <div class="tool-group">
-                <div class="tool-btn" onclick="runCurrentScript()"><div class="icon-large" style="background: #e6ffe6; border: 1px solid #00aa00;"></div><span style="color: #00aa00; font-weight:bold;">Run</span></div>
-                <span class="tool-group-title">RUN</span>
+                <div class="tool-btn run-btn" onclick="runCurrentScript()"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>Run</div>
+                <span class="tool-group-title">Run</span>
             </div>
         </div>
     </div>
 
     <div class="path-bar">
-        <span>▶</span>
-        <input type="text" class="path-input" value="/ home / breyes / math_lab_files /">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <input type="text" class="path-input" value="/ users / dev / projects / matlab_scripts /">
     </div>
 
     <div class="workspace">
         <div class="panel">
-            <div class="panel-header">Current Folder</div>
-            <div style="padding: 4px; border-bottom: 1px solid #eee; font-weight: bold; font-size: 11px; background:#f9f9f9;">Name ▲</div>
-            <ul class="folder-list" id="fileList">
-                </ul>
+            <div class="panel-header">Current Folder <span>12 items</span></div>
+            <ul class="folder-list" id="fileList"></ul>
         </div>
 
         <div class="center-col">
             <div class="panel">
-                <div class="panel-header">Editor - <span id="editorPath">/home/breyes/math_lab_files/gradients.m</span></div>
-                <div class="editor-area">
-                    <div class="editor-tabs">
-                        <div class="e-tab" id="activeTabName">gradients.m ×</div>
-                    </div>
-                    <div class="editor-content">
-                        <div class="line-numbers" id="lineNumbers">1</div>
-                        <div class="code-input" id="codeArea" spellcheck="false"></div>
-                    </div>
+                <div class="panel-header">Editor <span id="editorPath">gradients.m</span></div>
+                <div class="editor-tabs">
+                    <div class="e-tab" id="activeTabName">gradients.m <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:6px; cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>
+                </div>
+                <div class="editor-content">
+                    <div class="line-numbers" id="lineNumbers">1</div>
+                    <div class="code-input" id="codeArea" spellcheck="false"></div>
                 </div>
             </div>
 
             <div class="panel">
                 <div class="panel-header">Command Window</div>
                 <div class="cmd-window" id="cmdWindow">
-                    <div>New to MATLAB? See resources for <a href="#" style="color: #005696; text-decoration: underline;">Getting Started</a>.</div><br>
+                    <div class="cmd-msg" style="color:var(--text-muted);">MATLAB Premium - Academic Use. See <a href="#" style="color:var(--accent-blue); text-decoration:none;">Getting Started</a>.</div><br>
                     <div id="cmdHistory"></div>
                     <div class="cmd-line">
-                        <span style="font-weight:bold; font-style:italic; margin-right:3px;">fx</span>
-                        <span class="prompt">>></span>
+                        <span class="prompt">fx &raquo;</span>
                         <input type="text" class="prompt-input" id="cmdInput" autocomplete="off" autofocus>
                     </div>
                 </div>
@@ -178,18 +260,17 @@
         <div class="panel">
             <div class="panel-header">Workspace</div>
             <table class="workspace-table">
-                <tr><th>Name ▲</th><th>Value</th></tr>
-                <tr><td><span class="var-icon"></span>ans</td><td>1x1 sym</td></tr>
-                <tr><td><span class="var-icon"></span>x</td><td>1x1 sym</td></tr>
-                <tr><td><span class="var-icon"></span>y</td><td>1x1 sym</td></tr>
-                <tr><td><span class="var-icon"></span>z</td><td>1x1 sym</td></tr>
+                <tr><th>Name</th><th>Value</th></tr>
+                <tr><td><span class="var-icon">S</span>ans</td><td>1x1 sym</td></tr>
+                <tr><td><span class="var-icon">S</span>x</td><td>1x1 sym</td></tr>
+                <tr><td><span class="var-icon">S</span>y</td><td>1x1 sym</td></tr>
+                <tr><td><span class="var-icon">S</span>z</td><td>1x1 sym</td></tr>
             </table>
         </div>
     </div>
 </div>
 
 <script>
-    // 1. Store all extracted codes
     const codeFiles = {
         "gradients.m": `% To find gradient of a given function at the point p = [a b c]
 syms x y z
@@ -320,18 +401,11 @@ fprintf ('\\n Final value at x = %.1f is y = %.6f\\n', x1, y1);`
 
     let currentFileName = "gradients.m";
 
-    // 2. Simple Syntax Highlighter
     function highlightMATLAB(code) {
-        // Escape HTML
         let html = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        
-        // Highlight Strings
         html = html.replace(/('.*?')/g, '<span class="c-string">$1</span>');
-        
-        // Highlight Comments
         html = html.replace(/(%.*)/g, '<span class="c-comment">$1</span>');
         
-        // Highlight Keywords (doing this carefully to not mess up spans)
         const keywords = ['clc','clear','all','syms','int','diff','dsolve','subs','if','else','end','display','fprintf','while','for','eval','norm','dot','acos','gradient','divergence','curl'];
         const regex = new RegExp(`\\b(${keywords.join('|')})\\b(?![^<]*>)`, 'g');
         html = html.replace(regex, '<span class="c-keyword">$1</span>');
@@ -339,76 +413,67 @@ fprintf ('\\n Final value at x = %.1f is y = %.6f\\n', x1, y1);`
         return html;
     }
 
-    // 3. UI Update Functions
     function loadFile(fileName) {
         currentFileName = fileName;
         const code = codeFiles[fileName];
         
-        // Update Tabs & Paths
-        document.getElementById('activeTabName').innerText = `${fileName} ×`;
-        document.getElementById('editorPath').innerText = `/home/breyes/math_lab_files/${fileName}`;
+        document.getElementById('activeTabName').innerHTML = `${fileName} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:8px; cursor:pointer; opacity:0.7"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+        document.getElementById('editorPath').innerText = fileName;
         
-        // Update Code Area
         document.getElementById('codeArea').innerHTML = highlightMATLAB(code);
         
-        // Update Line Numbers
-        const linesCount = code.split('\n').length;
+        const linesCount = code.split('\\n').length;
         let linesHTML = '';
-        for (let i = 1; i <= linesCount; i++) {
-            linesHTML += i + '<br>';
-        }
+        for (let i = 1; i <= linesCount; i++) linesHTML += i + '<br>';
         document.getElementById('lineNumbers').innerHTML = linesHTML;
 
-        // Highlight Active File in List
         document.querySelectorAll('.folder-list li').forEach(li => {
             if(li.innerText.trim() === fileName) li.classList.add('active-file');
             else li.classList.remove('active-file');
         });
     }
 
-    // 4. Initialize File List
     const fileListEl = document.getElementById('fileList');
     Object.keys(codeFiles).forEach(file => {
         const li = document.createElement('li');
-        li.innerHTML = `<div class="file-icon"></div> ${file}`;
+        li.innerHTML = `<svg class="file-icon" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg> ${file}`;
         li.onclick = () => loadFile(file);
         fileListEl.appendChild(li);
     });
 
-    // Load initial file
     loadFile("gradients.m");
 
-    // 5. Command Window Logic
     const cmdInput = document.getElementById('cmdInput');
     const cmdHistory = document.getElementById('cmdHistory');
     const cmdWindow = document.getElementById('cmdWindow');
 
-    function appendToCmd(text, isError = false) {
+    function appendToCmd(text, type="msg") {
         const div = document.createElement('div');
+        div.className = `cmd-msg ${type === 'err' ? 'cmd-err' : (type === 'success' ? 'cmd-success' : '')}`;
         div.innerHTML = text;
-        if(isError) div.style.color = '#d90000';
         cmdHistory.appendChild(div);
         cmdWindow.scrollTop = cmdWindow.scrollHeight;
     }
 
     function runCurrentScript() {
-        appendToCmd(`<span class="prompt">>></span> ${currentFileName.replace('.m', '')}`);
-        appendToCmd(`<i>Running script ${currentFileName}... Done. Outputs suppressed in mock.</i><br>`);
+        appendToCmd(`<span class="prompt">fx &raquo;</span> run ${currentFileName}`);
+        appendToCmd(`<i>Running script ${currentFileName}... Done.</i>`, 'success');
     }
 
     function copyCurrentCode() {
         const code = codeFiles[currentFileName];
         navigator.clipboard.writeText(code).then(() => {
-            appendToCmd(`<i>Code from ${currentFileName} copied to clipboard.</i><br>`);
+            appendToCmd(`<span class="prompt">fx &raquo;</span> copy ${currentFileName}`);
+            appendToCmd(`<i>Code copied to clipboard successfully!</i>`, 'success');
         }).catch(err => {
-            appendToCmd(`<span style="color:#d90000">Failed to copy code: ${err}</span><br>`);
+            appendToCmd(`Failed to copy code: ${err}`, 'err');
         });
     }
 
     cmdInput.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             const val = this.value;
-            appendToCmd(`<span class="prompt">>></span> ${val}`);
+            appendToCmd(`<span class="prompt">fx &raquo;</span> ${val}`);
             
             if (val.trim() !== '') {
                 if(val === 'clc') {
@@ -417,7 +482,7 @@ fprintf ('\\n Final value at x = %.1f is y = %.6f\\n', x1, y1);`
                     loadFile(val + '.m');
                     runCurrentScript();
                 } else {
-                    appendToCmd(`Unrecognized function or variable '${val.split(' ')[0]}'.`, true);
+                    appendToCmd(`Unrecognized function or variable '${val.split(' ')[0]}'.`, 'err');
                 }
             }
             this.value = '';
