@@ -124,6 +124,10 @@
                 <span class="tool-group-title">FILE</span>
             </div>
             <div class="tool-group">
+                <div class="tool-btn" onclick="copyCurrentCode()"><div class="icon-large" style="background: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23005696%22><path d=%22M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z%22/></svg>') no-repeat center/cover; background-size: 20px; background-color: #eaeaea; background-position: center;"></div>Copy</div>
+                <span class="tool-group-title">EDIT</span>
+            </div>
+            <div class="tool-group">
                 <div class="tool-btn" onclick="runCurrentScript()"><div class="icon-large" style="background: #e6ffe6; border: 1px solid #00aa00;"></div><span style="color: #00aa00; font-weight:bold;">Run</span></div>
                 <span class="tool-group-title">RUN</span>
             </div>
@@ -390,6 +394,15 @@ fprintf ('\\n Final value at x = %.1f is y = %.6f\\n', x1, y1);`
     function runCurrentScript() {
         appendToCmd(`<span class="prompt">>></span> ${currentFileName.replace('.m', '')}`);
         appendToCmd(`<i>Running script ${currentFileName}... Done. Outputs suppressed in mock.</i><br>`);
+    }
+
+    function copyCurrentCode() {
+        const code = codeFiles[currentFileName];
+        navigator.clipboard.writeText(code).then(() => {
+            appendToCmd(`<i>Code from ${currentFileName} copied to clipboard.</i><br>`);
+        }).catch(err => {
+            appendToCmd(`<span style="color:#d90000">Failed to copy code: ${err}</span><br>`);
+        });
     }
 
     cmdInput.addEventListener('keypress', function (e) {
