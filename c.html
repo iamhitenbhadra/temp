@@ -1,0 +1,552 @@
+<html><head><meta charset="utf-8"><style>body{margin:0;font-family:Arial;background:#f5f5f5;display:flex}aside{width:280px;position:fixed;height:100%;overflow:auto;background:#fff;padding:20px;border-right:1px solid #ddd}main{margin-left:280px;padding:30px;max-width:1000px}.card{background:#fff;padding:20px;border-radius:12px;margin:20px 0}a{display:block;padding:8px;color:#222;text-decoration:none}pre{background:#fafafa;border:1px solid #ddd;padding:15px;overflow:auto}button{float:right}</style></head><body><aside><h2>Index</h2><a href="#p1">1. 1. Program to find nPr of a number using functions</a><a href="#p2">2. 2. Program to find nCr of a number using functions</a><a href="#p3">3. 3. Program to find average of 3 numbers using functions</a><a href="#p4">4. 4. Function to find GCD of two numbers and use it to find GCD of 4 numbers</a><a href="#p5">5. 5. Program to find factorial of a given number using recursive function</a><a href="#p6">6. 6. Program to find first n terms of Fibonacci series using recursive function</a><a href="#p7">7. 7. Program to find GCD of two numbers using recursive function</a><a href="#p8">8. 8. Program to add two 1-D arrays</a><a href="#p9">9. 9. Marks of 10 students are stored as an array. Program to find top score</a><a href="#p10">10. 10. Marks of 10 students are stored as an array. Program to count students scoring &gt;=</a><a href="#p11">11. 11. Program to search a key element in an array using linear search algorithm</a><a href="#p12">12. 12. Program to find the mean of a given 1-D array</a><a href="#p13">13. 13. Program to sort an array in ascending order using bubble sort algorithm</a><a href="#p14">14. 14. Program to transpose a given 2-D array</a><a href="#p15">15. 15. Program to find sum of given two 2-D arrays</a><a href="#p16">16. 16. Program to find difference of given two 2-D arrays</a><a href="#p17">17. 17. Program to count the number of characters in a string without using inbuilt function</a><a href="#p18">18. 18. Program to copy a given string into another string without using inbuilt function</a><a href="#p19">19. 19. Program to count number of alphabets, numbers and other characters in a string</a><a href="#p20">20. 20. Program to exchange two numbers using functions</a><a href="#p21">21. 21. Program using pointers to swap two numbers</a><a href="#p22">22. 22. Program using pointers to find sum of a given 1-D array</a></aside><main><h1>IA2 Programming Using C</h1><section class="card" id="p1"><small>Program 1</small><h2>1. Program to find nPr of a number using functions</h2><button onclick="cp('c1',this)">Copy</button><pre><code id="c1">#include &lt;stdio.h&gt; 
+ 
+int factorial(int n) { 
+    int fact = 1, i; 
+    for (i = 1; i &lt;= n; i++) { 
+        fact = fact * i; 
+    } 
+    return fact; 
+} 
+ 
+int main() { 
+    int n, r, npr; 
+ 
+    printf(&quot;Enter n and r: &quot;); 
+    scanf(&quot;%d %d&quot;, &amp;n, &amp;r); 
+ 
+    if (n &gt;= r) { 
+        npr = factorial(n) / factorial(n - r); 
+        printf(&quot;nPr = %d\n&quot;, npr); 
+    } else { 
+        printf(&quot;Invalid input. n should be greater than or equal to r.\n&quot;); 
+    } 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p2"><small>Program 2</small><h2>2. Program to find nCr of a number using functions</h2><button onclick="cp('c2',this)">Copy</button><pre><code id="c2">#include &lt;stdio.h&gt; 
+ 
+int factorial(int n) { 
+    int fact = 1, i; 
+    for (i = 1; i &lt;= n; i++) { 
+        fact = fact * i; 
+    } 
+    return fact; 
+} 
+ 
+int main() { 
+    int n, r, ncr; 
+ 
+    printf(&quot;Enter n and r: &quot;); 
+    scanf(&quot;%d %d&quot;, &amp;n, &amp;r); 
+ 
+    if (n &gt;= r) { 
+        ncr = factorial(n) / (factorial(r) * factorial(n - r)); 
+        printf(&quot;nCr = %d\n&quot;, ncr); 
+    } else { 
+        printf(&quot;Invalid input. n should be greater than or equal to r.\n&quot;); 
+    } 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p3"><small>Program 3</small><h2>3. Program to find average of 3 numbers using functions</h2><button onclick="cp('c3',this)">Copy</button><pre><code id="c3">#include &lt;stdio.h&gt; 
+ 
+float average(int a, int b, int c) { 
+    return (a + b + c) / 3.0; 
+} 
+ 
+int main() { 
+    int a, b, c; 
+    float avg; 
+ 
+    printf(&quot;Enter three numbers: &quot;); 
+    scanf(&quot;%d %d %d&quot;, &amp;a, &amp;b, &amp;c); 
+ 
+    avg = average(a, b, c); 
+ 
+    printf(&quot;Average = %.2f\n&quot;, avg); 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p4"><small>Program 4</small><h2>4. Function to find GCD of two numbers and use it to find GCD of 4 numbers</h2><button onclick="cp('c4',this)">Copy</button><pre><code id="c4">#include &lt;stdio.h&gt; 
+ 
+int gcd(int x, int y) { 
+    while (x != y) { 
+        if (x &gt; y) 
+            x = x - y; 
+        else 
+            y = y - x; 
+    } 
+    return x; 
+} 
+ 
+int main() { 
+    int a, b, c, d, result; 
+ 
+    printf(&quot;Enter four numbers: &quot;); 
+    scanf(&quot;%d %d %d %d&quot;, &amp;a, &amp;b, &amp;c, &amp;d); 
+ 
+    result = gcd(a, b); 
+    result = gcd(result, c); 
+    result = gcd(result, d); 
+ 
+    printf(&quot;GCD of four numbers = %d\n&quot;, result); 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p5"><small>Program 5</small><h2>5. Program to find factorial of a given number using recursive function</h2><button onclick="cp('c5',this)">Copy</button><pre><code id="c5">#include &lt;stdio.h&gt; 
+ 
+int factorial(int n) { 
+    if (n == 0 || n == 1) 
+        return 1; 
+    else 
+        return n * factorial(n - 1); 
+} 
+ 
+int main() { 
+    int n; 
+ 
+    printf(&quot;Enter a number: &quot;); 
+    scanf(&quot;%d&quot;, &amp;n); 
+ 
+    printf(&quot;Factorial of %d = %d\n&quot;, n, factorial(n)); 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p6"><small>Program 6</small><h2>6. Program to find first n terms of Fibonacci series using recursive function</h2><button onclick="cp('c6',this)">Copy</button><pre><code id="c6">#include &lt;stdio.h&gt; 
+ 
+int fibonacci(int n) { 
+    if (n == 1 || n == 2) 
+        return 1; 
+    else 
+        return fibonacci(n - 1) + fibonacci(n - 2); 
+} 
+ 
+int main() { 
+    int n, i; 
+ 
+    printf(&quot;Enter number of terms: &quot;); 
+    scanf(&quot;%d&quot;, &amp;n); 
+ 
+    printf(&quot;Fibonacci series:\n&quot;); 
+    for (i = 1; i &lt;= n; i++) { 
+        printf(&quot;%d &quot;, fibonacci(i)); 
+    } 
+    printf(&quot;\n&quot;); 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p7"><small>Program 7</small><h2>7. Program to find GCD of two numbers using recursive function</h2><button onclick="cp('c7',this)">Copy</button><pre><code id="c7">#include &lt;stdio.h&gt; 
+ 
+int gcd(int a, int b) { 
+    if (a == b) 
+        return a; 
+    else if (a &gt; b) 
+        return gcd(a - b, b); 
+    else 
+        return gcd(a, b - a); 
+} 
+ 
+int main() { 
+    int a, b; 
+ 
+    printf(&quot;Enter two numbers: &quot;); 
+    scanf(&quot;%d %d&quot;, &amp;a, &amp;b); 
+ 
+    printf(&quot;GCD = %d\n&quot;, gcd(a, b)); 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p8"><small>Program 8</small><h2>8. Program to add two 1-D arrays</h2><button onclick="cp('c8',this)">Copy</button><pre><code id="c8">#include &lt;stdio.h&gt; 
+ 
+int main() { 
+    int a[25], b[25], c[25], n, i; 
+ 
+    printf(&quot;Enter the size of arrays: &quot;); 
+    scanf(&quot;%d&quot;, &amp;n); 
+ 
+    printf(&quot;Enter elements of first array:\n&quot;); 
+    for (i = 0; i &lt; n; i++) { 
+        scanf(&quot;%d&quot;, &amp;a[i]); 
+    } 
+ 
+    printf(&quot;Enter elements of second array:\n&quot;); 
+    for (i = 0; i &lt; n; i++) { 
+        scanf(&quot;%d&quot;, &amp;b[i]); 
+    } 
+ 
+    for (i = 0; i &lt; n; i++) { 
+        c[i] = a[i] + b[i]; 
+    } 
+ 
+    printf(&quot;Sum array is:\n&quot;); 
+    for (i = 0; i &lt; n; i++) { 
+        printf(&quot;%d &quot;, c[i]); 
+    } 
+    printf(&quot;\n&quot;); 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p9"><small>Program 9</small><h2>9. Marks of 10 students are stored as an array. Program to find top score</h2><button onclick="cp('c9',this)">Copy</button><pre><code id="c9">#include &lt;stdio.h&gt; 
+ 
+int main() { 
+    int marks[10], i, topScore; 
+ 
+    printf(&quot;Enter marks of 10 students:\n&quot;); 
+    for (i = 0; i &lt; 10; i++) { 
+        scanf(&quot;%d&quot;, &amp;marks[i]); 
+    } 
+ 
+    topScore = marks[0]; 
+ 
+    for (i = 1; i &lt; 10; i++) { 
+        if (marks[i] &gt; topScore) { 
+            topScore = marks[i]; 
+        } 
+    } 
+ 
+    printf(&quot;Top score = %d\n&quot;, topScore); 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p10"><small>Program 10</small><h2>10. Marks of 10 students are stored as an array. Program to count students scoring &gt;=</h2><button onclick="cp('c10',this)">Copy</button><pre><code id="c10">60 
+#include &lt;stdio.h&gt; 
+ 
+int main() { 
+    int marks[10], i, count = 0; 
+ 
+    printf(&quot;Enter marks of 10 students:\n&quot;); 
+    for (i = 0; i &lt; 10; i++) { 
+        scanf(&quot;%d&quot;, &amp;marks[i]); 
+    } 
+ 
+    for (i = 0; i &lt; 10; i++) { 
+        if (marks[i] &gt;= 60) { 
+            count++; 
+        } 
+    } 
+ 
+    printf(&quot;Number of students scoring 60 or more = %d\n&quot;, count); 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p11"><small>Program 11</small><h2>11. Program to search a key element in an array using linear search algorithm</h2><button onclick="cp('c11',this)">Copy</button><pre><code id="c11">#include &lt;stdio.h&gt; 
+ 
+int main() { 
+    int arr[50], n, key, i, flag = 0; 
+ 
+    printf(&quot;Enter size of array: &quot;); 
+    scanf(&quot;%d&quot;, &amp;n); 
+ 
+    printf(&quot;Enter array elements:\n&quot;); 
+    for (i = 0; i &lt; n; i++) { 
+        scanf(&quot;%d&quot;, &amp;arr[i]); 
+    } 
+ 
+    printf(&quot;Enter key element to search: &quot;); 
+    scanf(&quot;%d&quot;, &amp;key); 
+ 
+    for (i = 0; i &lt; n; i++) { 
+        if (arr[i] == key) { 
+            flag = 1; 
+            break; 
+        } 
+    } 
+ 
+    if (flag == 1) 
+        printf(&quot;Key element found at position %d\n&quot;, i + 1); 
+    else 
+        printf(&quot;Key element not found\n&quot;); 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p12"><small>Program 12</small><h2>12. Program to find the mean of a given 1-D array</h2><button onclick="cp('c12',this)">Copy</button><pre><code id="c12">#include &lt;stdio.h&gt; 
+ 
+int main() { 
+    int arr[50], n, i, sum = 0; 
+    float mean; 
+ 
+    printf(&quot;Enter the size of array: &quot;); 
+    scanf(&quot;%d&quot;, &amp;n); 
+ 
+    printf(&quot;Enter array elements:\n&quot;); 
+    for (i = 0; i &lt; n; i++) { 
+        scanf(&quot;%d&quot;, &amp;arr[i]); 
+        sum = sum + arr[i]; 
+    } 
+ 
+    mean = (float)sum / n; 
+ 
+    printf(&quot;Mean = %.2f\n&quot;, mean); 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p13"><small>Program 13</small><h2>13. Program to sort an array in ascending order using bubble sort algorithm</h2><button onclick="cp('c13',this)">Copy</button><pre><code id="c13">#include &lt;stdio.h&gt; 
+ 
+int main() { 
+    int arr[50], n, i, j, temp; 
+ 
+    printf(&quot;Enter size of array: &quot;); 
+    scanf(&quot;%d&quot;, &amp;n); 
+ 
+    printf(&quot;Enter array elements:\n&quot;); 
+    for (i = 0; i &lt; n; i++) { 
+        scanf(&quot;%d&quot;, &amp;arr[i]); 
+    } 
+ 
+    for (i = 0; i &lt; n - 1; i++) { 
+        for (j = 0; j &lt; n - 1 - i; j++) { 
+            if (arr[j] &gt; arr[j + 1]) { 
+                temp = arr[j]; 
+                arr[j] = arr[j + 1]; 
+                arr[j + 1] = temp; 
+            } 
+        } 
+    } 
+ 
+    printf(&quot;Sorted array in ascending order:\n&quot;); 
+    for (i = 0; i &lt; n; i++) { 
+        printf(&quot;%d &quot;, arr[i]); 
+    } 
+    printf(&quot;\n&quot;); 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p14"><small>Program 14</small><h2>14. Program to transpose a given 2-D array</h2><button onclick="cp('c14',this)">Copy</button><pre><code id="c14">#include &lt;stdio.h&gt; 
+ 
+int main() { 
+    int a[10][10], transpose[10][10]; 
+    int rows, cols, i, j; 
+ 
+    printf(&quot;Enter number of rows and columns: &quot;); 
+    scanf(&quot;%d %d&quot;, &amp;rows, &amp;cols); 
+ 
+    printf(&quot;Enter matrix elements:\n&quot;); 
+    for (i = 0; i &lt; rows; i++) { 
+        for (j = 0; j &lt; cols; j++) { 
+            scanf(&quot;%d&quot;, &amp;a[i][j]); 
+        } 
+    } 
+ 
+    for (i = 0; i &lt; rows; i++) { 
+        for (j = 0; j &lt; cols; j++) { 
+            transpose[j][i] = a[i][j]; 
+        } 
+    } 
+ 
+    printf(&quot;Transpose of matrix:\n&quot;); 
+    for (i = 0; i &lt; cols; i++) { 
+        for (j = 0; j &lt; rows; j++) { 
+            printf(&quot;%d &quot;, transpose[i][j]); 
+        } 
+        printf(&quot;\n&quot;); 
+    } 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p15"><small>Program 15</small><h2>15. Program to find sum of given two 2-D arrays</h2><button onclick="cp('c15',this)">Copy</button><pre><code id="c15">#include &lt;stdio.h&gt; 
+ 
+int main() { 
+    int a[10][10], b[10][10], sum[10][10]; 
+    int rows, cols, i, j; 
+ 
+    printf(&quot;Enter number of rows and columns: &quot;); 
+    scanf(&quot;%d %d&quot;, &amp;rows, &amp;cols); 
+ 
+    printf(&quot;Enter elements of first matrix:\n&quot;); 
+    for (i = 0; i &lt; rows; i++) { 
+        for (j = 0; j &lt; cols; j++) { 
+            scanf(&quot;%d&quot;, &amp;a[i][j]); 
+        } 
+    } 
+ 
+    printf(&quot;Enter elements of second matrix:\n&quot;); 
+    for (i = 0; i &lt; rows; i++) { 
+        for (j = 0; j &lt; cols; j++) { 
+            scanf(&quot;%d&quot;, &amp;b[i][j]); 
+        } 
+    } 
+ 
+    for (i = 0; i &lt; rows; i++) { 
+        for (j = 0; j &lt; cols; j++) { 
+            sum[i][j] = a[i][j] + b[i][j]; 
+        } 
+    } 
+ 
+    printf(&quot;Sum of two matrices:\n&quot;); 
+    for (i = 0; i &lt; rows; i++) { 
+        for (j = 0; j &lt; cols; j++) { 
+            printf(&quot;%d &quot;, sum[i][j]); 
+        } 
+        printf(&quot;\n&quot;); 
+    } 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p16"><small>Program 16</small><h2>16. Program to find difference of given two 2-D arrays</h2><button onclick="cp('c16',this)">Copy</button><pre><code id="c16">#include &lt;stdio.h&gt; 
+ 
+int main() { 
+    int a[10][10], b[10][10], diff[10][10]; 
+    int rows, cols, i, j; 
+ 
+    printf(&quot;Enter number of rows and columns: &quot;); 
+    scanf(&quot;%d %d&quot;, &amp;rows, &amp;cols); 
+ 
+    printf(&quot;Enter elements of first matrix:\n&quot;); 
+    for (i = 0; i &lt; rows; i++) { 
+        for (j = 0; j &lt; cols; j++) { 
+            scanf(&quot;%d&quot;, &amp;a[i][j]); 
+        } 
+    } 
+ 
+    printf(&quot;Enter elements of second matrix:\n&quot;); 
+    for (i = 0; i &lt; rows; i++) { 
+        for (j = 0; j &lt; cols; j++) { 
+            scanf(&quot;%d&quot;, &amp;b[i][j]); 
+        } 
+    } 
+ 
+    for (i = 0; i &lt; rows; i++) { 
+        for (j = 0; j &lt; cols; j++) { 
+            diff[i][j] = a[i][j] - b[i][j]; 
+        } 
+    } 
+ 
+    printf(&quot;Difference of two matrices:\n&quot;); 
+    for (i = 0; i &lt; rows; i++) { 
+        for (j = 0; j &lt; cols; j++) { 
+            printf(&quot;%d &quot;, diff[i][j]); 
+        } 
+        printf(&quot;\n&quot;); 
+    } 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p17"><small>Program 17</small><h2>17. Program to count the number of characters in a string without using inbuilt function</h2><button onclick="cp('c17',this)">Copy</button><pre><code id="c17">#include &lt;stdio.h&gt; 
+ 
+int main() { 
+    char str[100]; 
+    int i = 0, count = 0; 
+ 
+    printf(&quot;Enter a string: &quot;); 
+    fgets(str, sizeof(str), stdin); 
+ 
+    while (str[i] != &#x27;\0&#x27; &amp;&amp; str[i] != &#x27;\n&#x27;) { 
+        count++; 
+        i++; 
+    } 
+ 
+    printf(&quot;Number of characters = %d\n&quot;, count); 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p18"><small>Program 18</small><h2>18. Program to copy a given string into another string without using inbuilt function</h2><button onclick="cp('c18',this)">Copy</button><pre><code id="c18">#include &lt;stdio.h&gt; 
+ 
+int main() { 
+    char source[100], destination[100]; 
+    int i = 0; 
+ 
+    printf(&quot;Enter a string: &quot;); 
+    fgets(source, sizeof(source), stdin); 
+ 
+    while (source[i] != &#x27;\0&#x27;) { 
+        destination[i] = source[i]; 
+        i++; 
+    } 
+ 
+    destination[i] = &#x27;\0&#x27;; 
+ 
+    printf(&quot;Copied string: %s&quot;, destination); 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p19"><small>Program 19</small><h2>19. Program to count number of alphabets, numbers and other characters in a string</h2><button onclick="cp('c19',this)">Copy</button><pre><code id="c19">#include &lt;stdio.h&gt; 
+#include &lt;ctype.h&gt; 
+ 
+int main() { 
+    char str[100]; 
+    int i, alphabets = 0, digits = 0, others = 0; 
+ 
+    printf(&quot;Enter a string: &quot;); 
+    fgets(str, sizeof(str), stdin); 
+ 
+    for (i = 0; str[i] != &#x27;\0&#x27; &amp;&amp; str[i] != &#x27;\n&#x27;; i++) { 
+        if (isalpha(str[i])) 
+            alphabets++; 
+        else if (isdigit(str[i])) 
+            digits++; 
+        else 
+            others++; 
+    } 
+ 
+    printf(&quot;Number of alphabets = %d\n&quot;, alphabets); 
+    printf(&quot;Number of digits = %d\n&quot;, digits); 
+    printf(&quot;Number of other characters = %d\n&quot;, others); 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p20"><small>Program 20</small><h2>20. Program to exchange two numbers using functions</h2><button onclick="cp('c20',this)">Copy</button><pre><code id="c20">#include &lt;stdio.h&gt; 
+ 
+int a, b; 
+ 
+void exchange() { 
+    int temp; 
+    temp = a; 
+    a = b; 
+    b = temp; 
+} 
+ 
+int main() { 
+    printf(&quot;Enter two numbers: &quot;); 
+    scanf(&quot;%d %d&quot;, &amp;a, &amp;b); 
+ 
+    printf(&quot;Before exchange: a = %d, b = %d\n&quot;, a, b); 
+    exchange(); 
+    printf(&quot;After exchange: a = %d, b = %d\n&quot;, a, b); 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p21"><small>Program 21</small><h2>21. Program using pointers to swap two numbers</h2><button onclick="cp('c21',this)">Copy</button><pre><code id="c21">#include &lt;stdio.h&gt; 
+ 
+int main() { 
+    int a, b, temp; 
+    int *p1, *p2; 
+ 
+    p1 = &amp;a; 
+    p2 = &amp;b; 
+ 
+    printf(&quot;Enter two numbers: &quot;); 
+    scanf(&quot;%d %d&quot;, p1, p2); 
+ 
+    temp = *p1; 
+    *p1 = *p2; 
+    *p2 = temp; 
+ 
+    printf(&quot;After swapping: a = %d, b = %d\n&quot;, a, b); 
+ 
+    return 0; 
+} 
+ </code></pre></section><section class="card" id="p22"><small>Program 22</small><h2>22. Program using pointers to find sum of a given 1-D array</h2><button onclick="cp('c22',this)">Copy</button><pre><code id="c22">#include &lt;stdio.h&gt; 
+ 
+int main() { 
+    int arr[50], n, i, sum = 0; 
+    int *p; 
+ 
+    printf(&quot;Enter size of array: &quot;); 
+    scanf(&quot;%d&quot;, &amp;n); 
+ 
+    printf(&quot;Enter array elements:\n&quot;); 
+    for (i = 0; i &lt; n; i++) { 
+        scanf(&quot;%d&quot;, &amp;arr[i]); 
+    } 
+ 
+    p = arr; 
+ 
+    for (i = 0; i &lt; n; i++) { 
+        sum = sum + *p; 
+        p++; 
+    } 
+ 
+    printf(&quot;Sum of array elements = %d\n&quot;, sum); 
+ 
+    return 0; 
+} </code></pre></section><script>function cp(id,b){navigator.clipboard.writeText(document.getElementById(id).innerText);b.innerText='Copied';setTimeout(()=>b.innerText='Copy',1000);}</script></main></body></html>
