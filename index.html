@@ -3,189 +3,191 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arduino IDE Clone</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Arduino IDE - IoT Lab Experiments</title>
+<link href="https://fonts.googleapis.com/css2?family=Consolas:wght@400;700&display=swap" rel="stylesheet">
 <style>
     :root {
-        --bg-main: #0d1117;
-        --bg-sidebar: #161b22;
-        --bg-toolbar: #1e1b4b;
-        --border-color: #30363d;
-        --text-primary: #c9d1d9;
-        --text-secondary: #8b949e;
-        --accent: #0ea5e9;
-        --accent-hover: #38bdf8;
-        --font-ui: 'Inter', system-ui, sans-serif;
-        --font-code: 'JetBrains Mono', monospace;
+        --arduino-teal: #00979c;
+        --arduino-teal-dark: #00878f;
+        --arduino-teal-light: #4db3b7;
+        --bg-main: #f0f0f0;
+        --editor-bg: #ffffff;
+        --text-main: #000000;
+        --tab-bg: #e2ecee;
+        --tab-active: #ffffff;
+        --border-color: #cccccc;
+        --console-bg: #000000;
+        --console-text: #ffffff;
+        
+        /* Classic 1.8.x Syntax Colors */
+        --sy-keyword: #d35400; /* Orange */
+        --sy-function: #00979c; /* Teal */
+        --sy-comment: #95a5a6; /* Gray */
+        --sy-string: #005c5f; /* Dark Teal */
+        --sy-literal: #00979c;
+        --sy-preprocessor: #5e6d03; /* Olive */
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body, html { height: 100%; font-family: var(--font-ui); overflow: hidden; background: var(--bg-main); color: var(--text-primary); }
+    body, html { height: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; background: var(--bg-main); }
 
     /* Layout */
     .ide-container { display: flex; flex-direction: column; height: 100vh; }
-    
-    /* Toolbar */
+
+    /* OS-Style Menu Bar */
+    .menu-bar {
+        background: #ffffff; border-bottom: 1px solid var(--border-color);
+        display: flex; padding: 4px 10px; font-size: 12px; color: #333;
+    }
+    .menu-item { margin-right: 15px; cursor: default; padding: 2px 4px; border-radius: 2px; }
+    .menu-item:hover { background: #e0e0e0; }
+
+    /* Classic Teal Toolbar */
     .toolbar { 
-        background: linear-gradient(90deg, #0f172a, #1e1b4b);
-        height: 60px; display: flex; align-items: center; padding: 0 20px; 
-        border-bottom: 1px solid var(--border-color);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 10;
+        background: var(--arduino-teal); height: 45px; display: flex; align-items: center; 
+        padding: 0 10px; border-bottom: 1px solid var(--arduino-teal-dark); gap: 2px;
     }
     .toolbar-btn {
-        width: 36px; height: 36px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
-        background: rgba(255,255,255,0.05); margin-right: 12px; cursor: pointer;
-        display: flex; justify-content: center; align-items: center;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 34px; height: 34px; border: 1px solid transparent; background: transparent; 
+        border-radius: 4px; cursor: pointer; display: flex; justify-content: center; align-items: center;
+        color: #ffffff; transition: background 0.1s;
     }
-    .toolbar-btn:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-    .toolbar-btn:active { transform: translateY(0); }
-    .toolbar-btn svg { width: 18px; height: 18px; fill: #fff; opacity: 0.9; }
-    
-    .toolbar-right { margin-left: auto; display: flex; }
-    .toolbar-right-btn { 
-        background: transparent; border: none; cursor: pointer; 
-        display: flex; align-items: center; justify-content: center;
-        width: 36px; height: 36px; border-radius: 8px; transition: background 0.2s;
-    }
-    .toolbar-right-btn:hover { background: rgba(255,255,255,0.1); }
-    .toolbar-right-btn svg { width: 22px; height: 22px; fill: var(--accent); }
+    .toolbar-btn:hover { background: rgba(0,0,0,0.1); border-color: rgba(0,0,0,0.2); }
+    .toolbar-btn svg { width: 18px; height: 18px; fill: currentColor; }
+    .spacer { flex: 1; }
 
-    /* Main Area */
-    .main-area { display: flex; flex: 1; height: calc(100% - 60px - 160px); }
+    /* Workspace */
+    .workspace { display: flex; flex: 1; height: calc(100% - 70px - 180px); }
 
-    /* Sidebar Navigation */
-    .sidebar { width: 320px; background: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; }
-    .sidebar-header { 
-        padding: 16px; background: rgba(0,0,0,0.2); font-weight: 600; 
-        border-bottom: 1px solid var(--border-color); font-size: 13px; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.5px;
+    /* Sketchbook Sidebar */
+    .sidebar { 
+        width: 300px; background: #fafafa; border-right: 1px solid var(--border-color); 
+        display: flex; flex-direction: column; 
     }
-    .search-box { padding: 12px; border-bottom: 1px solid var(--border-color); background: rgba(255,255,255,0.02); }
+    .sidebar-header {
+        padding: 8px 12px; background: #e0e0e0; font-weight: 600; font-size: 12px;
+        border-bottom: 1px solid var(--border-color); color: #333; text-transform: uppercase;
+    }
+    .search-box { padding: 8px; border-bottom: 1px solid var(--border-color); background: #f0f0f0; }
     .search-box input {
-        width: 100%; padding: 8px 12px; border: 1px solid var(--border-color);
-        border-radius: 6px; font-size: 13px; background: rgba(0,0,0,0.2); color: var(--text-primary); outline: none; transition: border-color 0.2s;
+        width: 100%; padding: 6px 10px; border: 1px solid var(--border-color);
+        border-radius: 3px; font-size: 12px; outline: none;
     }
-    .search-box input:focus { border-color: var(--accent); }
-    .program-list { flex: 1; overflow-y: auto; list-style: none; padding: 8px; }
+    .search-box input:focus { border-color: var(--arduino-teal); }
+    
+    .program-list { flex: 1; overflow-y: auto; list-style: none; padding: 4px; }
     .program-item { 
-        padding: 10px 14px; margin-bottom: 4px; border-radius: 6px; cursor: pointer; 
-        font-size: 13px; color: var(--text-secondary); line-height: 1.4; transition: all 0.2s;
+        padding: 8px 10px; margin-bottom: 2px; border-radius: 3px; cursor: pointer; 
+        font-size: 12px; color: #444; transition: background 0.1s;
     }
-    .program-item:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
-    .program-item.active { background: rgba(14, 165, 233, 0.15); color: var(--accent); font-weight: 500; border-left: 3px solid var(--accent); }
+    .program-item:hover { background: #e8e8e8; }
+    .program-item.active { 
+        background: var(--arduino-teal-light); color: #fff; font-weight: bold; 
+    }
+
+    /* Editor Wrapper */
+    .editor-wrapper { flex: 1; display: flex; flex-direction: column; min-width: 0; }
     
-    /* Editor Area */
-    .editor-wrapper { flex: 1; display: flex; flex-direction: column; background: var(--bg-main); min-width: 0; }
-    
-    /* Tabs */
-    .tabs-bar { 
-        display: flex; background: rgba(0,0,0,0.2); height: 40px; 
-        align-items: flex-end; padding-left: 10px; position: relative; border-bottom: 1px solid var(--border-color);
+    /* Editor Tabs */
+    .tabs-bar {
+        background: var(--arduino-teal); display: flex; align-items: flex-end; 
+        padding: 0 5px; height: 30px;
     }
     .tab {
-        background: var(--bg-main); color: var(--accent); padding: 10px 24px; font-size: 13px;
-        border-radius: 8px 8px 0 0; margin-right: 4px; font-weight: 500; display: flex; align-items: center;
-        border: 1px solid var(--border-color); border-bottom: none; position: relative; top: 1px; font-family: var(--font-ui);
+        background: var(--tab-bg); color: #333; font-size: 12px; font-family: Consolas, monospace;
+        padding: 5px 15px; border-radius: 3px 3px 0 0; margin-right: 2px; cursor: default;
+        display: flex; align-items: center; justify-content: space-between; min-width: 120px;
     }
-    .tab-actions { position: absolute; right: 16px; bottom: 8px; display: flex; gap: 12px; }
-    .action-btn {
-        background: transparent; border: 1px solid rgba(255,255,255,0.1); 
-        color: var(--text-primary); border-radius: 6px; padding: 4px 12px; font-size: 12px;
-        cursor: pointer; display: flex; align-items: center; transition: all 0.2s;
+    .tab.active { background: var(--tab-active); color: var(--text-main); font-weight: bold; border-top: 2px solid var(--arduino-teal-dark); }
+    .action-btn { 
+        background: transparent; border: none; font-size: 11px; cursor: pointer; 
+        color: var(--text-main); display: flex; align-items: center; gap: 4px; padding: 2px 6px;
     }
-    .action-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
-    .action-btn svg { width: 14px; height: 14px; fill: currentColor; margin-right: 6px; }
+    .action-btn:hover { background: #f0f0f0; border-radius: 3px; }
+    .tab-actions { margin-left: auto; margin-right: 10px; display: flex; gap: 10px; background: white; padding: 2px 5px; border-radius: 3px 3px 0 0; }
 
-    /* Code Editor */
+    /* Main Editor */
     .editor-container { 
-        flex: 1; display: flex; background: var(--bg-main); position: relative; overflow: auto; 
+        flex: 1; display: flex; background: var(--editor-bg); position: relative; overflow: auto;
     }
     .gutter {
-        padding: 16px 12px; text-align: right; background: var(--bg-main); color: #484f58;
-        font-family: var(--font-code); font-size: 14px;
-        border-right: 1px solid var(--border-color); user-select: none; min-width: 55px; line-height: 1.6;
+        padding: 10px 5px; text-align: right; background: #f0f0f0; color: #999;
+        font-family: Consolas, monospace; font-size: 14px; border-right: 1px solid var(--border-color);
+        user-select: none; min-width: 40px; line-height: 1.5;
     }
     .code-area {
-        padding: 16px 20px; flex: 1; font-family: var(--font-code);
-        font-size: 14px; line-height: 1.6; white-space: pre; outline: none;
-        color: #c9d1d9; overflow-x: auto; tab-size: 4;
+        padding: 10px 15px; flex: 1; font-family: Consolas, monospace; font-size: 14px; 
+        line-height: 1.5; white-space: pre; outline: none; color: var(--text-main); 
+        overflow-x: auto; tab-size: 2;
     }
 
-    /* Syntax Highlighting Colors */
-    .keyword { color: #ff7b72; font-weight: 500; }
-    .function { color: #d2a8ff; }
-    .comment { color: #8b949e; font-style: italic; }
-    .string { color: #a5d6ff; }
-    .constant { color: #79c0ff; }
-    .preprocessor { color: #ff7b72; }
+    /* Classic Syntax Highlighting */
+    .keyword { color: var(--sy-keyword); }
+    .function { color: var(--sy-function); }
+    .literal { color: var(--sy-literal); }
+    .comment { color: var(--sy-comment); }
+    .string { color: var(--sy-string); }
+    .preprocessor { color: var(--sy-preprocessor); }
 
-    /* Console Area */
-    .console-wrapper { height: 160px; display: flex; flex-direction: column; border-top: 1px solid var(--border-color); }
+    /* Bottom Status & Console */
+    .console-wrapper { height: 180px; display: flex; flex-direction: column; }
     .status-bar { 
-        background: rgba(0,0,0,0.3); color: var(--text-secondary); font-size: 12px; padding: 6px 20px; 
-        display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color);
+        background: var(--arduino-teal); color: white; font-size: 12px; font-weight: 500;
+        padding: 6px 15px; display: flex; justify-content: space-between; align-items: center;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
     }
     .console {
-        flex: 1; background: #010409; padding: 12px 20px; color: #e6edf3; 
-        font-family: var(--font-code); font-size: 13px; overflow-y: auto; white-space: pre-wrap; line-height: 1.5;
+        flex: 1; background: var(--console-bg); padding: 10px 15px; color: var(--console-text); 
+        font-family: Consolas, monospace; font-size: 13px; overflow-y: auto; white-space: pre-wrap; line-height: 1.4;
     }
 
     /* Scrollbars */
     ::-webkit-scrollbar { width: 12px; height: 12px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border: 3px solid transparent; background-clip: padding-box; border-radius: 6px; }
-    ::-webkit-scrollbar-thumb:hover { background-color: rgba(255,255,255,0.2); }
+    ::-webkit-scrollbar-track { background: #f0f0f0; border-left: 1px solid #ccc; }
+    ::-webkit-scrollbar-thumb { background: #cdcdcd; border: 1px solid #f0f0f0; }
+    ::-webkit-scrollbar-thumb:hover { background: #a6a6a6; }
 </style>
 </head>
 <body>
 
 <div class="ide-container">
     
-    <!-- Toolbar -->
-    <div class="toolbar">
-        <!-- Verify -->
-        <button class="toolbar-btn" title="Verify"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></button>
-        <!-- Upload -->
-        <button class="toolbar-btn" title="Upload"><svg viewBox="0 0 24 24"><path d="M5 13h11.17l-4.88 4.88c-.39.39-.39 1.03 0 1.42.39.39 1.02.39 1.41 0l6.59-6.59c.39-.39.39-1.02 0-1.41l-6.58-6.6a.996.996 0 1 0-1.41 1.41l4.88 4.88H5c-.55 0-1 .45-1 1s.45 1 1 1z"/></svg></button>
-        <!-- New -->
-        <button class="toolbar-btn" title="New" style="margin-left: 20px;"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></button>
-        <!-- Open -->
-        <button class="toolbar-btn" title="Open"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></button>
-        <!-- Save -->
-        <button class="toolbar-btn" title="Save"><svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg></button>
-        
-        <div class="toolbar-right">
-            <button class="toolbar-right-btn" title="Serial Monitor"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></button>
-        </div>
+    <div class="menu-bar">
+        <div class="menu-item">File</div>
+        <div class="menu-item">Edit</div>
+        <div class="menu-item">Sketch</div>
+        <div class="menu-item">Tools</div>
+        <div class="menu-item">Help</div>
     </div>
 
-    <!-- Main Content Area -->
-    <div class="main-area">
+    <div class="toolbar">
+        <button class="toolbar-btn" title="Verify" onclick="simulateCompile()"><svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg></button>
+        <button class="toolbar-btn" title="Upload" onclick="simulateUpload()"><svg viewBox="0 0 24 24"><path d="M5 13h11.2l-4.9 4.9c-.4.4-.4 1 0 1.4.4.4 1 .4 1.4 0l6.6-6.6c.4-.4.4-1 0-1.4l-6.6-6.6c-.4-.4-1-.4-1.4 0-.4.4-.4 1 0 1.4l4.9 4.9H5c-.6 0-1 .4-1 1s.4 1 1 1z"/></svg></button>
+        <button class="toolbar-btn" title="New" style="margin-left: 15px;"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></button>
+        <button class="toolbar-btn" title="Open"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" transform="rotate(-90 12 12)"/></svg></button>
+        <button class="toolbar-btn" title="Save"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" transform="rotate(90 12 12)"/></svg></button>
         
-        <!-- Sidebar -->
+        <div class="spacer"></div>
+        <button class="toolbar-btn" title="Serial Monitor"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></button>
+    </div>
+
+    <div class="workspace">
+        
         <div class="sidebar">
-            <div class="sidebar-header">
-                Sketchbook
-            </div>
+            <div class="sidebar-header">Sketchbook - IoT Lab</div>
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search questions..." onkeyup="filterPrograms()">
+                <input type="text" id="searchInput" placeholder="Filter sketches..." onkeyup="filterPrograms()">
             </div>
             <ul class="program-list" id="programList">
-                <!-- Populated via JS -->
-            </ul>
+                </ul>
         </div>
 
-        <!-- Editor -->
         <div class="editor-wrapper">
             <div class="tabs-bar">
-                <div class="tab" id="activeTabName">firmware.ino</div>
+                <div class="tab active" id="activeTabName">sketch.ino</div>
                 <div class="tab-actions">
-                    <button class="action-btn" onclick="copyCode()">
-                        <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg> Copy
-                    </button>
-                    <button class="action-btn" onclick="downloadCode()">
-                        <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg> Download
-                    </button>
+                    <button class="action-btn" onclick="copyCode()">Copy Code</button>
+                    <button class="action-btn" onclick="downloadCode()">Download</button>
                 </div>
             </div>
             <div class="editor-container" id="editorContainer">
@@ -195,270 +197,100 @@
         </div>
     </div>
 
-    <!-- Console -->
     <div class="console-wrapper">
         <div class="status-bar">
-            <span id="statusMessage">Done compiling.</span>
-            <span>Arduino / Genuino Uno on COM5</span>
+            <span id="statusMessage">Done loading.</span>
+            <span>Arduino/Genuino Uno on COM5</span>
         </div>
-        <div class="console" id="consoleOutput">Sketch uses 31212 bytes (5%) of program storage space. Maximum is 524288 bytes.<br>Global variables use 1204 bytes (14%) of dynamic memory.</div>
+        <div class="console" id="consoleOutput">Select a sketch from the sketchbook to begin.</div>
     </div>
 
 </div>
 
 <script>
-    // --- Data ---
+    // --- Data: All 28 IoT Lab Experiments ---
     const programs = [
-        {
-            id: "1a",
-            title: "1a. Push button to control LED and Buzzer",
-            lang: "cpp",
-            ext: ".ino",
-            code: `void setup() {\n  pinMode(14,OUTPUT); // Buzzer\n  pinMode(2, OUTPUT); // LED\n  pinMode(35,INPUT);  // Push Button\n}\nvoid loop() {\n  if(digitalRead(35)==HIGH) {\n    digitalWrite(14,HIGH);\n    digitalWrite(2, HIGH);\n  } else {\n    digitalWrite(14,LOW);\n    digitalWrite(2, LOW);\n  }\n}`
-        },
-        {
-            id: "1b",
-            title: "1b. IR sensor with ESP32 using MATLAB",
-            lang: "matlab",
-            ext: ".m",
-            code: `clear all;\na = arduino("COM5","ESP32-WROOM-DevKitC"); \nirPin = 'D18'; \ndisp("Reading IR sensor... Press Ctrl+C to stop.")\nwhile true\n    irValue = readDigitalPin(a, irPin); \n    if irValue == 0\n        fprintf("Obstacle Detected!\\n");\n    else\n        fprintf("No Obstacle.\\n");\n    end\n    pause(0.5); \nend`
-        },
-        {
-            id: "2a",
-            title: "2a. Touch Sensor to control LED & LCD",
-            lang: "cpp",
-            ext: ".ino",
-            code: `#include <Wire.h>\n#include <LiquidCrystal_I2C.h>\nLiquidCrystal_I2C lcd(0x27,16,2); \n#define tsPin 18 \nint ledPin = 2; \n\nvoid setup() {\n  lcd.init();\n  lcd.backlight();\n  Serial.begin(9600); \n  pinMode(ledPin, OUTPUT); \n  pinMode(tsPin, INPUT); \n}\nvoid loop() {\n  int tsValue = digitalRead(tsPin);\n  delay(100);\n  if (tsValue==HIGH) {\n    digitalWrite(ledPin, HIGH); \n    lcd.setCursor(0,0);\n    lcd.print("Touched    ");\n  } else {\n    digitalWrite(ledPin, LOW); \n    lcd.setCursor(0,0);\n    lcd.print("NoT_Touched");\n  }\n}`
-        },
-        {
-            id: "2b",
-            title: "2b. Buzzer with ESP32 using MATLAB",
-            lang: "matlab",
-            ext: ".m",
-            code: `clear all;\nbuzzerPin = 'D14'; \na = arduino('COM5', 'ESP32-WROOM-DevKitC');\nconfigurePin(a, buzzerPin, 'DigitalOutput');\nfor i = 1:5 \n    writeDigitalPin(a, buzzerPin, 1); \n    pause(0.5); \n    writeDigitalPin(a, buzzerPin, 0); \n    pause(0.5); \nend`
-        },
-        {
-            id: "3a",
-            title: "3a. LDR sensor to control 240V AC light",
-            lang: "cpp",
-            ext: ".ino",
-            code: `void setup() {\n  Serial.begin(9600);\n  pinMode(36, INPUT);  // LDR\n  pinMode(13, OUTPUT); // Relay controlling 240V AC light\n}\nvoid loop() {\n  int ldrValue = analogRead(36);\n  if(ldrValue < 500) {\n    digitalWrite(13, HIGH); \n  } else {\n    digitalWrite(13, LOW); \n  }\n  delay(100);\n}`
-        },
-        {
-            id: "3b",
-            title: "3b. Push Button and LED using MATLAB",
-            lang: "matlab",
-            ext: ".m",
-            code: `clear all;\nledPin = 'D2'; \nbuttonPin = 'D35'; \na = arduino("COM5", "ESP32-WROOM-DevKitC");\nconfigurePin(a, ledPin, 'DigitalOutput');\nconfigurePin(a, buttonPin, 'DigitalInput');\nwhile true\n    buttonState = readDigitalPin(a, buttonPin); \n    if buttonState == 1\n        writeDigitalPin(a, ledPin, 1); \n    else\n        writeDigitalPin(a, ledPin, 0); \n    end\n    pause(0.1); \nend`
-        },
-        {
-            id: "4a",
-            title: "4a. LCD left scrolling message",
-            lang: "cpp",
-            ext: ".ino",
-            code: `#include <LiquidCrystal_I2C.h>\n#include <Wire.h>\nLiquidCrystal_I2C lcd(0x27, 16, 2);\n\nvoid setup() {\n  lcd.init();\n  lcd.backlight();\n  lcd.setCursor(0,0);\n  lcd.print("Welcome to BNMIT Bangalore");\n  delay(1000);\n}\nvoid loop() {\n  for (int positionCounter = 0; positionCounter < 13; positionCounter++) {\n    lcd.scrollDisplayLeft();\n    delay(150);\n  }\n  delay(1000);\n}`
-        },
-        {
-            id: "4b",
-            title: "4b. IR sensor using MATLAB",
-            lang: "matlab",
-            ext: ".m",
-            code: `clear all;\na = arduino("COM5","ESP32-WROOM-DevKitC"); \nirPin = 'D18'; \nwhile true\n    irValue = readDigitalPin(a, irPin); \n    if irValue == 0\n        fprintf("Obstacle Detected!\\n");\n    else\n        fprintf("No Obstacle.\\n");\n    end\n    pause(0.5); \nend`
-        },
-        {
-            id: "5a",
-            title: "5a. LCD Right scrolling message",
-            lang: "cpp",
-            ext: ".ino",
-            code: `#include <LiquidCrystal_I2C.h>\n#include <Wire.h>\nLiquidCrystal_I2C lcd(0x27, 16, 2);\n\nvoid setup() {\n  lcd.init();\n  lcd.backlight();\n  lcd.setCursor(0,0);\n  lcd.print("Welcome to BNMIT Bangalore");\n  delay(1000);\n}\nvoid loop() {\n  for (int positionCounter = 0; positionCounter < 29; positionCounter++) {\n    lcd.scrollDisplayRight();\n    delay(150);\n  }\n  delay(1000);\n}`
-        },
-        {
-            id: "5b",
-            title: "5b. LDR sensor using MATLAB",
-            lang: "matlab",
-            ext: ".m",
-            code: `clear all;\nclc;\nlightSensorPin = 'D36'; \na = arduino('COM5', 'ESP32-WROOM-DevKitC'); \nwhile true\n    lightValue = readVoltage(a, lightSensorPin); \n    fprintf('Light Sensor Value: %.2f V\\n', lightValue);\n    pause(1);\nend`
-        },
-        {
-            id: "6a",
-            title: "6a. Control LED and Buzzer through Bluetooth",
-            lang: "cpp",
-            ext: ".ino",
-            code: `#include <SoftwareSerial.h>\nSoftwareSerial mySerial (16,17); \nvoid setup() {\n  Serial.begin(9600);\n  mySerial.begin(9600);\n  pinMode(2,OUTPUT); // LED\n  pinMode(14,OUTPUT); // Buzzer\n}\nvoid loop() { \n  char val; \n  if (mySerial.available()) {\n    val = mySerial.read();\n    if(val=='1') {\n      digitalWrite(2, HIGH);\n      digitalWrite(14, HIGH);\n    }\n    if(val=='0') {\n      digitalWrite(2,LOW);\n      digitalWrite(14, LOW);\n    }\n  }\n}`
-        },
-        {
-            id: "6b",
-            title: "6b. Relay using MATLAB",
-            lang: "matlab",
-            ext: ".m",
-            code: `clear all;\nactuatorPin = 'D13'; \na = arduino('COM5', 'ESP32-WROOM-DevKitC'); \nwhile true\n    writeDigitalPin(a, actuatorPin, 1); \n    fprintf('Actuator is ON\\n');\n    pause(2); \n    writeDigitalPin(a, actuatorPin, 0); \n    fprintf('Actuator is OFF\\n');\n    pause(2); \nend`
-        },
-        {
-            id: "7a",
-            title: "7a. Key input to control LED and buzzer",
-            lang: "cpp",
-            ext: ".ino",
-            code: `char val;\nvoid setup() {\n  pinMode(2, OUTPUT);  // LED\n  pinMode(14, OUTPUT); // Buzzer\n  Serial.begin(115200);\n}\nvoid loop() {\n  if (Serial.available()) {\n    val = Serial.read();\n    if (val == '1') {\n      digitalWrite(2, HIGH);\n      digitalWrite(14, HIGH);\n    }\n    if (val == '0') {\n      digitalWrite(2, LOW);\n      digitalWrite(14, LOW);\n    }\n  }\n}`
-        },
-        {
-            id: "7b",
-            title: "7b. LED using MATLAB",
-            lang: "matlab",
-            ext: ".m",
-            code: `clear all;\nesp = arduino('COM5', 'ESP32-WROOM-DevKitC'); \nledPin = 'D2';\nconfigurePin(esp, ledPin, 'DigitalOutput');\nwhile true\n    writeDigitalPin(esp, ledPin, 1);\n    pause(1); \n    writeDigitalPin(esp, ledPin, 0);\n    pause(1); \nend`
-        },
-        {
-            id: "8a",
-            title: "8a. DHT11 Sensor on LCD",
-            lang: "cpp",
-            ext: ".ino",
-            code: `#include "DHT.h"\n#include <Wire.h>\n#include <LiquidCrystal_I2C.h>\n#define DHTPIN 32\nLiquidCrystal_I2C lcd(0x27,16,2); \nDHT dht(DHTPIN, DHT11);\n\nvoid setup() {\n  lcd.init();\n  lcd.backlight();\n  dht.begin();\n}\nvoid loop() {\n  float humi = dht.readHumidity();\n  float temp = dht.readTemperature();\n  \n  lcd.setCursor(0,0);\n  lcd.print("Temp: ");\n  lcd.print(temp);\n  lcd.print("C");\n  \n  lcd.setCursor(0,1);\n  lcd.print("Humidity: ");\n  lcd.print(humi);\n  \n  delay(1000);\n}`
-        },
-        {
-            id: "8b",
-            title: "8b. Relay using MATLAB",
-            lang: "matlab",
-            ext: ".m",
-            code: `clear all;\nactuatorPin = 'D13'; \na = arduino('COM5', 'ESP32-WROOM-DevKitC'); \nwhile true\n    writeDigitalPin(a, actuatorPin, 1); \n    fprintf('Actuator is ON\\n');\n    pause(2); \n    writeDigitalPin(a, actuatorPin, 0); \n    fprintf('Actuator is OFF\\n');\n    pause(2); \nend`
-        },
-        {
-            id: "9a",
-            title: "9a. Wi Fi through Blynk to control LED",
-            lang: "cpp",
-            ext: ".ino",
-            code: `#define BLYNK_TEMPLATE_ID "TMPLW7uIJFDM"\n#define BLYNK_DEVICE_NAME "LED"\n#define BLYNK_AUTH_TOKEN "aCixJKNOQK43PbB4uVy29yZgq6ZFqOSj"\n#define LED 2\n#define BLYNK_PRINT Serial\n#include <WiFi.h>\n#include <BlynkSimpleEsp32.h>\n\nchar auth[] = BLYNK_AUTH_TOKEN;\nchar ssid[] = "abcd";\nchar pass[] = "ZXCV@098";\nBlynkTimer timer;\n\nBLYNK_WRITE(V1) {\n  int value = param.asInt();\n  Blynk.virtualWrite(V1, value);\n  if(value == 1){\n    digitalWrite(LED, HIGH);\n  } else if(value == 0){\n    digitalWrite(LED, LOW);\n  }\n}\nvoid setup() {\n  pinMode(LED,OUTPUT);\n  Serial.begin(115200);\n  Blynk.begin(auth, ssid, pass);\n}\nvoid loop() {\n  Blynk.run();\n  timer.run();\n}`
-        },
-        {
-            id: "10a",
-            title: "10a. Wi Fi through Blynk to control Buzzer",
-            lang: "cpp",
-            ext: ".ino",
-            code: `#define BLYNK_TEMPLATE_ID "TMPLW7uIJFDM"\n#define BLYNK_DEVICE_NAME "Buzzer"\n#define BLYNK_AUTH_TOKEN "aCixJKNOQK43PbB4uVy29yZgq6ZFqOSj"\n#define BUZZER 14\n#define BLYNK_PRINT Serial\n#include <WiFi.h>\n#include <BlynkSimpleEsp32.h>\n\nchar auth[] = BLYNK_AUTH_TOKEN;\nchar ssid[] = "abcd";\nchar pass[] = "ZXCV@098";\nBlynkTimer timer;\n\nBLYNK_WRITE(V1) {\n  int value = param.asInt();\n  Blynk.virtualWrite(V1, value);\n  if(value == 1){\n    digitalWrite(BUZZER, HIGH);\n  } else if(value == 0){\n    digitalWrite(BUZZER, LOW);\n  }\n}\nvoid setup() {\n  pinMode(BUZZER,OUTPUT);\n  Serial.begin(115200);\n  Blynk.begin(auth, ssid, pass);\n}\nvoid loop() {\n  Blynk.run();\n  timer.run();\n}`
-        },
-        {
-            id: "11a",
-            title: "11a. LCD Name and USN alternatively",
-            lang: "cpp",
-            ext: ".ino",
-            code: `#include <Wire.h>\n#include <LiquidCrystal_I2C.h>\nLiquidCrystal_I2C lcd(0x27, 16, 2);\n\nvoid setup() {\n  lcd.init();\n  lcd.backlight();\n}\nvoid loop() {\n  lcd.clear();\n  lcd.setCursor(0, 0);\n  lcd.print("Name: Your Name");\n  delay(2000);\n  \n  lcd.clear();\n  lcd.setCursor(0, 0);\n  lcd.print("USN: 1BM21CS000");\n  delay(2000);\n}`
-        },
-        {
-            id: "11b",
-            title: "11b. LDR sensor using MATLAB",
-            lang: "matlab",
-            ext: ".m",
-            code: `clear all;\nclc;\nlightSensorPin = 'D36'; \na = arduino('COM5', 'ESP32-WROOM-DevKitC'); \nwhile true\n    lightValue = readVoltage(a, lightSensorPin); \n    fprintf('Light Sensor Value: %.2f V\\n', lightValue);\n    pause(1);\nend`
-        },
-        {
-            id: "12a",
-            title: "12a. Relay to control 240V bulb",
-            lang: "cpp",
-            ext: ".ino",
-            code: `int relayPin = 13; \nvoid setup() {\n  pinMode(relayPin, OUTPUT);\n}\nvoid loop() {\n  digitalWrite(relayPin, HIGH); // Bulb ON\n  delay(2000);\n  digitalWrite(relayPin, LOW);  // Bulb OFF\n  delay(2000);\n}`
-        },
-        {
-            id: "12b",
-            title: "12b. LED using MATLAB",
-            lang: "matlab",
-            ext: ".m",
-            code: `clear all;\nesp = arduino('COM5', 'ESP32-WROOM-DevKitC'); \nledPin = 'D2';\nconfigurePin(esp, ledPin, 'DigitalOutput');\nwhile true\n    writeDigitalPin(esp, ledPin, 1);\n    pause(1); \n    writeDigitalPin(esp, ledPin, 0);\n    pause(1); \nend`
-        },
-        {
-            id: "13a",
-            title: "13a. DHT11 Humidity and Temperature on Serial",
-            lang: "cpp",
-            ext: ".ino",
-            code: `#include "DHT.h"\n#define DHTPIN 32\nDHT dht(DHTPIN, DHT11);\n\nvoid setup() { \n  Serial.begin(9600);\n  dht.begin();\n}\nvoid loop() {\n  float humi = dht.readHumidity();\n  float temp = dht.readTemperature();\n  Serial.print("Temperature: ");\n  Serial.print(temp);\n  Serial.println("C ");\n  Serial.print("Humidity: ");\n  Serial.println(humi);\n  delay(1000);\n}`
-        },
-        {
-            id: "13b",
-            title: "13b. IR sensor using MATLAB",
-            lang: "matlab",
-            ext: ".m",
-            code: `clear all;\na = arduino("COM5","ESP32-WROOM-DevKitC"); \nirPin = 'D18'; \nwhile true\n    irValue = readDigitalPin(a, irPin); \n    if irValue == 0\n        fprintf("Obstacle Detected!\\n");\n    else\n        fprintf("No Obstacle.\\n");\n    end\n    pause(0.5); \nend`
-        },
-        {
-            id: "14a",
-            title: "14a. Bluetooth to control LED and Buzzer",
-            lang: "cpp",
-            ext: ".ino",
-            code: `#include <SoftwareSerial.h>\nSoftwareSerial mySerial (16,17); \nvoid setup() {\n  Serial.begin(9600);\n  mySerial.begin(9600);\n  pinMode(2,OUTPUT); // LED\n  pinMode(14,OUTPUT); // Buzzer\n}\nvoid loop() { \n  char val; \n  if (mySerial.available()) {\n    val = mySerial.read();\n    if(val=='1') {\n      digitalWrite(2, HIGH);\n      digitalWrite(14, HIGH);\n    }\n    if(val=='0') {\n      digitalWrite(2,LOW);\n      digitalWrite(14, LOW);\n    }\n  }\n}`
-        },
-        {
-            id: "14b",
-            title: "14b. Push Button and LED using MATLAB",
-            lang: "matlab",
-            ext: ".m",
-            code: `clear all;\nledPin = 'D2'; \nbuttonPin = 'D35'; \na = arduino("COM5", "ESP32-WROOM-DevKitC");\nconfigurePin(a, ledPin, 'DigitalOutput');\nconfigurePin(a, buttonPin, 'DigitalInput');\nwhile true\n    buttonState = readDigitalPin(a, buttonPin); \n    if buttonState == 1\n        writeDigitalPin(a, ledPin, 1); \n    else\n        writeDigitalPin(a, ledPin, 0); \n    end\n    pause(0.1); \nend`
-        },
-        {
-            id: "15a",
-            title: "15a. Bluetooth to control Relay",
-            lang: "cpp",
-            ext: ".ino",
-            code: `#include <SoftwareSerial.h>\nSoftwareSerial mySerial(16, 17); // RX, TX\nvoid setup() {\n  Serial.begin(9600);\n  mySerial.begin(9600);\n  pinMode(13, OUTPUT); // Relay Pin\n}\nvoid loop() {\n  char val;\n  if (mySerial.available()) {\n    val = mySerial.read();\n    if (val == '1') {\n      digitalWrite(13, HIGH); \n    } else if (val == '0') {\n      digitalWrite(13, LOW);  \n    }\n  }\n}`
-        },
-        {
-            id: "15b",
-            title: "15b. LDR sensor using MATLAB",
-            lang: "matlab",
-            ext: ".m",
-            code: `clear all;\nclc;\nlightSensorPin = 'D36'; \na = arduino('COM5', 'ESP32-WROOM-DevKitC'); \nwhile true\n    lightValue = readVoltage(a, lightSensorPin); \n    fprintf('Light Sensor Value: %.2f V\\n', lightValue);\n    pause(1);\nend`
-        }
+        { id: "1a", title: "1a. Push button to control LED and Buzzer", lang: "cpp", ext: ".ino", code: `void setup() {\n  pinMode(14,OUTPUT); // Buzzer\n  pinMode(2, OUTPUT); // LED\n  pinMode(35,INPUT);  // Push Button\n}\nvoid loop() {\n  if(digitalRead(35)==HIGH) {\n    digitalWrite(14,HIGH);\n    digitalWrite(2, HIGH);\n  } else {\n    digitalWrite(14,LOW);\n    digitalWrite(2, LOW);\n  }\n}` },
+        { id: "1b", title: "1b. IR sensor with ESP32 using MATLAB", lang: "matlab", ext: ".m", code: `clear all;\na = arduino("COM5","ESP32-WROOM-DevKitC"); \nirPin = 'D18'; \ndisp("Reading IR sensor... Press Ctrl+C to stop.")\nwhile true\n    irValue = readDigitalPin(a, irPin); \n    if irValue == 0\n        fprintf("Obstacle Detected!\\n");\n    else\n        fprintf("No Obstacle.\\n");\n    end\n    pause(0.5); \nend` },
+        { id: "2a", title: "2a. Touch Sensor to control LED & LCD", lang: "cpp", ext: ".ino", code: `#include <Wire.h>\n#include <LiquidCrystal_I2C.h>\nLiquidCrystal_I2C lcd(0x27,16,2); \n#define tsPin 18 \nint ledPin = 2; \n\nvoid setup() {\n  lcd.init();\n  lcd.backlight();\n  Serial.begin(9600); \n  pinMode(ledPin, OUTPUT); \n  pinMode(tsPin, INPUT); \n}\nvoid loop() {\n  int tsValue = digitalRead(tsPin);\n  delay(100);\n  if (tsValue==HIGH) {\n    digitalWrite(ledPin, HIGH); \n    lcd.setCursor(0,0);\n    lcd.print("Touched    ");\n  } else {\n    digitalWrite(ledPin, LOW); \n    lcd.setCursor(0,0);\n    lcd.print("NoT_Touched");\n  }\n}` },
+        { id: "2b", title: "2b. Buzzer with ESP32 using MATLAB", lang: "matlab", ext: ".m", code: `clear all;\nbuzzerPin = 'D14'; \na = arduino('COM5', 'ESP32-WROOM-DevKitC');\nconfigurePin(a, buzzerPin, 'DigitalOutput');\nfor i = 1:5 \n    writeDigitalPin(a, buzzerPin, 1); \n    pause(0.5); \n    writeDigitalPin(a, buzzerPin, 0); \n    pause(0.5); \nend` },
+        { id: "3a", title: "3a. LDR sensor to control 240V AC light", lang: "cpp", ext: ".ino", code: `void setup() {\n  Serial.begin(9600);\n  pinMode(36, INPUT);  // LDR\n  pinMode(13, OUTPUT); // Relay controlling 240V AC light\n}\nvoid loop() {\n  int ldrValue = analogRead(36);\n  if(ldrValue < 500) {\n    digitalWrite(13, HIGH); \n  } else {\n    digitalWrite(13, LOW); \n  }\n  delay(100);\n}` },
+        { id: "3b", title: "3b. Push Button and LED using MATLAB", lang: "matlab", ext: ".m", code: `clear all;\nledPin = 'D2'; \nbuttonPin = 'D35'; \na = arduino("COM5", "ESP32-WROOM-DevKitC");\nconfigurePin(a, ledPin, 'DigitalOutput');\nconfigurePin(a, buttonPin, 'DigitalInput');\nwhile true\n    buttonState = readDigitalPin(a, buttonPin); \n    if buttonState == 1\n        writeDigitalPin(a, ledPin, 1); \n    else\n        writeDigitalPin(a, ledPin, 0); \n    end\n    pause(0.1); \nend` },
+        { id: "4a", title: "4a. LCD left scrolling message", lang: "cpp", ext: ".ino", code: `#include <LiquidCrystal_I2C.h>\n#include <Wire.h>\nLiquidCrystal_I2C lcd(0x27, 16, 2);\n\nvoid setup() {\n  lcd.init();\n  lcd.backlight();\n  lcd.setCursor(0,0);\n  lcd.print("Welcome to BNMIT Bangalore");\n  delay(1000);\n}\nvoid loop() {\n  for (int positionCounter = 0; positionCounter < 13; positionCounter++) {\n    lcd.scrollDisplayLeft();\n    delay(150);\n  }\n  delay(1000);\n}` },
+        { id: "4b", title: "4b. IR sensor using MATLAB", lang: "matlab", ext: ".m", code: `clear all;\na = arduino("COM5","ESP32-WROOM-DevKitC"); \nirPin = 'D18'; \nwhile true\n    irValue = readDigitalPin(a, irPin); \n    if irValue == 0\n        fprintf("Obstacle Detected!\\n");\n    else\n        fprintf("No Obstacle.\\n");\n    end\n    pause(0.5); \nend` },
+        { id: "5a", title: "5a. LCD Right scrolling message", lang: "cpp", ext: ".ino", code: `#include <LiquidCrystal_I2C.h>\n#include <Wire.h>\nLiquidCrystal_I2C lcd(0x27, 16, 2);\n\nvoid setup() {\n  lcd.init();\n  lcd.backlight();\n  lcd.setCursor(0,0);\n  lcd.print("Welcome to BNMIT Bangalore");\n  delay(1000);\n}\nvoid loop() {\n  for (int positionCounter = 0; positionCounter < 29; positionCounter++) {\n    lcd.scrollDisplayRight();\n    delay(150);\n  }\n  delay(1000);\n}` },
+        { id: "5b", title: "5b. LDR sensor using MATLAB", lang: "matlab", ext: ".m", code: `clear all;\nclc;\nlightSensorPin = 'D36'; \na = arduino('COM5', 'ESP32-WROOM-DevKitC'); \nwhile true\n    lightValue = readVoltage(a, lightSensorPin); \n    fprintf('Light Sensor Value: %.2f V\\n', lightValue);\n    pause(1);\nend` },
+        { id: "6a", title: "6a. Control LED and Buzzer through Bluetooth", lang: "cpp", ext: ".ino", code: `#include <SoftwareSerial.h>\nSoftwareSerial mySerial (16,17); \nvoid setup() {\n  Serial.begin(9600);\n  mySerial.begin(9600);\n  pinMode(2,OUTPUT); // LED\n  pinMode(14,OUTPUT); // Buzzer\n}\nvoid loop() { \n  char val; \n  if (mySerial.available()) {\n    val = mySerial.read();\n    if(val=='1') {\n      digitalWrite(2, HIGH);\n      digitalWrite(14, HIGH);\n    }\n    if(val=='0') {\n      digitalWrite(2,LOW);\n      digitalWrite(14, LOW);\n    }\n  }\n}` },
+        { id: "6b", title: "6b. Relay using MATLAB", lang: "matlab", ext: ".m", code: `clear all;\nactuatorPin = 'D13'; \na = arduino('COM5', 'ESP32-WROOM-DevKitC'); \nwhile true\n    writeDigitalPin(a, actuatorPin, 1); \n    fprintf('Actuator is ON\\n');\n    pause(2); \n    writeDigitalPin(a, actuatorPin, 0); \n    fprintf('Actuator is OFF\\n');\n    pause(2); \nend` },
+        { id: "7a", title: "7a. Key input to control LED and buzzer", lang: "cpp", ext: ".ino", code: `char val;\nvoid setup() {\n  pinMode(2, OUTPUT);  // LED\n  pinMode(14, OUTPUT); // Buzzer\n  Serial.begin(115200);\n}\nvoid loop() {\n  if (Serial.available()) {\n    val = Serial.read();\n    if (val == '1') {\n      digitalWrite(2, HIGH);\n      digitalWrite(14, HIGH);\n    }\n    if (val == '0') {\n      digitalWrite(2, LOW);\n      digitalWrite(14, LOW);\n    }\n  }\n}` },
+        { id: "7b", title: "7b. LED using MATLAB", lang: "matlab", ext: ".m", code: `clear all;\nesp = arduino('COM5', 'ESP32-WROOM-DevKitC'); \nledPin = 'D2';\nconfigurePin(esp, ledPin, 'DigitalOutput');\nwhile true\n    writeDigitalPin(esp, ledPin, 1);\n    pause(1); \n    writeDigitalPin(esp, ledPin, 0);\n    pause(1); \nend` },
+        { id: "8a", title: "8a. DHT11 Sensor on LCD", lang: "cpp", ext: ".ino", code: `#include "DHT.h"\n#include <Wire.h>\n#include <LiquidCrystal_I2C.h>\n#define DHTPIN 32\nLiquidCrystal_I2C lcd(0x27,16,2); \nDHT dht(DHTPIN, DHT11);\n\nvoid setup() {\n  lcd.init();\n  lcd.backlight();\n  dht.begin();\n}\nvoid loop() {\n  float humi = dht.readHumidity();\n  float temp = dht.readTemperature();\n  \n  lcd.setCursor(0,0);\n  lcd.print("Temp: ");\n  lcd.print(temp);\n  lcd.print("C");\n  \n  lcd.setCursor(0,1);\n  lcd.print("Humidity: ");\n  lcd.print(humi);\n  \n  delay(1000);\n}` },
+        { id: "8b", title: "8b. Relay using MATLAB", lang: "matlab", ext: ".m", code: `clear all;\nactuatorPin = 'D13'; \na = arduino('COM5', 'ESP32-WROOM-DevKitC'); \nwhile true\n    writeDigitalPin(a, actuatorPin, 1); \n    fprintf('Actuator is ON\\n');\n    pause(2); \n    writeDigitalPin(a, actuatorPin, 0); \n    fprintf('Actuator is OFF\\n');\n    pause(2); \nend` },
+        { id: "9a", title: "9a. Wi Fi through Blynk to control LED", lang: "cpp", ext: ".ino", code: `#define BLYNK_TEMPLATE_ID "TMPLW7uIJFDM"\n#define BLYNK_DEVICE_NAME "LED"\n#define BLYNK_AUTH_TOKEN "aCixJKNOQK43PbB4uVy29yZgq6ZFqOSj"\n#define LED 2\n#define BLYNK_PRINT Serial\n#include <WiFi.h>\n#include <BlynkSimpleEsp32.h>\n\nchar auth[] = BLYNK_AUTH_TOKEN;\nchar ssid[] = "abcd";\nchar pass[] = "ZXCV@098";\nBlynkTimer timer;\n\nBLYNK_WRITE(V1) {\n  int value = param.asInt();\n  Blynk.virtualWrite(V1, value);\n  if(value == 1){\n    digitalWrite(LED, HIGH);\n  } else if(value == 0){\n    digitalWrite(LED, LOW);\n  }\n}\nvoid setup() {\n  pinMode(LED,OUTPUT);\n  Serial.begin(115200);\n  Blynk.begin(auth, ssid, pass);\n}\nvoid loop() {\n  Blynk.run();\n  timer.run();\n}` },
+        { id: "10a", title: "10a. Wi Fi through Blynk to control Buzzer", lang: "cpp", ext: ".ino", code: `#define BLYNK_TEMPLATE_ID "TMPLW7uIJFDM"\n#define BLYNK_DEVICE_NAME "Buzzer"\n#define BLYNK_AUTH_TOKEN "aCixJKNOQK43PbB4uVy29yZgq6ZFqOSj"\n#define BUZZER 14\n#define BLYNK_PRINT Serial\n#include <WiFi.h>\n#include <BlynkSimpleEsp32.h>\n\nchar auth[] = BLYNK_AUTH_TOKEN;\nchar ssid[] = "abcd";\nchar pass[] = "ZXCV@098";\nBlynkTimer timer;\n\nBLYNK_WRITE(V1) {\n  int value = param.asInt();\n  Blynk.virtualWrite(V1, value);\n  if(value == 1){\n    digitalWrite(BUZZER, HIGH);\n  } else if(value == 0){\n    digitalWrite(BUZZER, LOW);\n  }\n}\nvoid setup() {\n  pinMode(BUZZER,OUTPUT);\n  Serial.begin(115200);\n  Blynk.begin(auth, ssid, pass);\n}\nvoid loop() {\n  Blynk.run();\n  timer.run();\n}` },
+        { id: "11a", title: "11a. LCD Name and USN alternatively", lang: "cpp", ext: ".ino", code: `#include <Wire.h>\n#include <LiquidCrystal_I2C.h>\nLiquidCrystal_I2C lcd(0x27, 16, 2);\n\nvoid setup() {\n  lcd.init();\n  lcd.backlight();\n}\nvoid loop() {\n  lcd.clear();\n  lcd.setCursor(0, 0);\n  lcd.print("Name: Your Name");\n  delay(2000);\n  \n  lcd.clear();\n  lcd.setCursor(0, 0);\n  lcd.print("USN: 1BM21CS000");\n  delay(2000);\n}` },
+        { id: "11b", title: "11b. LDR sensor using MATLAB", lang: "matlab", ext: ".m", code: `clear all;\nclc;\nlightSensorPin = 'D36'; \na = arduino('COM5', 'ESP32-WROOM-DevKitC'); \nwhile true\n    lightValue = readVoltage(a, lightSensorPin); \n    fprintf('Light Sensor Value: %.2f V\\n', lightValue);\n    pause(1);\nend` },
+        { id: "12a", title: "12a. Relay to control 240V bulb", lang: "cpp", ext: ".ino", code: `int relayPin = 13; \nvoid setup() {\n  pinMode(relayPin, OUTPUT);\n}\nvoid loop() {\n  digitalWrite(relayPin, HIGH); // Bulb ON\n  delay(2000);\n  digitalWrite(relayPin, LOW);  // Bulb OFF\n  delay(2000);\n}` },
+        { id: "12b", title: "12b. LED using MATLAB", lang: "matlab", ext: ".m", code: `clear all;\nesp = arduino('COM5', 'ESP32-WROOM-DevKitC'); \nledPin = 'D2';\nconfigurePin(esp, ledPin, 'DigitalOutput');\nwhile true\n    writeDigitalPin(esp, ledPin, 1);\n    pause(1); \n    writeDigitalPin(esp, ledPin, 0);\n    pause(1); \nend` },
+        { id: "13a", title: "13a. DHT11 Humidity and Temperature on Serial", lang: "cpp", ext: ".ino", code: `#include "DHT.h"\n#define DHTPIN 32\nDHT dht(DHTPIN, DHT11);\n\nvoid setup() { \n  Serial.begin(9600);\n  dht.begin();\n}\nvoid loop() {\n  float humi = dht.readHumidity();\n  float temp = dht.readTemperature();\n  Serial.print("Temperature: ");\n  Serial.print(temp);\n  Serial.println("C ");\n  Serial.print("Humidity: ");\n  Serial.println(humi);\n  delay(1000);\n}` },
+        { id: "13b", title: "13b. IR sensor using MATLAB", lang: "matlab", ext: ".m", code: `clear all;\na = arduino("COM5","ESP32-WROOM-DevKitC"); \nirPin = 'D18'; \nwhile true\n    irValue = readDigitalPin(a, irPin); \n    if irValue == 0\n        fprintf("Obstacle Detected!\\n");\n    else\n        fprintf("No Obstacle.\\n");\n    end\n    pause(0.5); \nend` },
+        { id: "14a", title: "14a. Bluetooth to control LED and Buzzer", lang: "cpp", ext: ".ino", code: `#include <SoftwareSerial.h>\nSoftwareSerial mySerial (16,17); \nvoid setup() {\n  Serial.begin(9600);\n  mySerial.begin(9600);\n  pinMode(2,OUTPUT); // LED\n  pinMode(14,OUTPUT); // Buzzer\n}\nvoid loop() { \n  char val; \n  if (mySerial.available()) {\n    val = mySerial.read();\n    if(val=='1') {\n      digitalWrite(2, HIGH);\n      digitalWrite(14, HIGH);\n    }\n    if(val=='0') {\n      digitalWrite(2,LOW);\n      digitalWrite(14, LOW);\n    }\n  }\n}` },
+        { id: "14b", title: "14b. Push Button and LED using MATLAB", lang: "matlab", ext: ".m", code: `clear all;\nledPin = 'D2'; \nbuttonPin = 'D35'; \na = arduino("COM5", "ESP32-WROOM-DevKitC");\nconfigurePin(a, ledPin, 'DigitalOutput');\nconfigurePin(a, buttonPin, 'DigitalInput');\nwhile true\n    buttonState = readDigitalPin(a, buttonPin); \n    if buttonState == 1\n        writeDigitalPin(a, ledPin, 1); \n    else\n        writeDigitalPin(a, ledPin, 0); \n    end\n    pause(0.1); \nend` },
+        { id: "15a", title: "15a. Bluetooth to control Relay", lang: "cpp", ext: ".ino", code: `#include <SoftwareSerial.h>\nSoftwareSerial mySerial(16, 17); // RX, TX\nvoid setup() {\n  Serial.begin(9600);\n  mySerial.begin(9600);\n  pinMode(13, OUTPUT); // Relay Pin\n}\nvoid loop() {\n  char val;\n  if (mySerial.available()) {\n    val = mySerial.read();\n    if (val == '1') {\n      digitalWrite(13, HIGH); \n    } else if (val == '0') {\n      digitalWrite(13, LOW);  \n    }\n  }\n}` },
+        { id: "15b", title: "15b. LDR sensor using MATLAB", lang: "matlab", ext: ".m", code: `clear all;\nclc;\nlightSensorPin = 'D36'; \na = arduino('COM5', 'ESP32-WROOM-DevKitC'); \nwhile true\n    lightValue = readVoltage(a, lightSensorPin); \n    fprintf('Light Sensor Value: %.2f V\\n', lightValue);\n    pause(1);\nend` }
     ];
 
     let currentProgram = null;
 
-    // --- Highlighting Logic ---
+    // --- Syntax Highlighting Logic ---
     function highlightCode(code, lang) {
         if (lang === 'cpp') {
             return code
                 .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-                .replace(/(#\w+.*)/g, '<span class="preprocessor">$1</span>') // Preprocessor
-                .replace(/(".*?")/g, '<span class="string">$1</span>') // Strings
-                .replace(/(\/\/.*)/g, '<span class="comment">$1</span>') // Comments
-                .replace(/\b(void|int|char|float|if|else|while|for|true|false)\b/g, '<span class="keyword">$1</span>') // Keywords
-                .replace(/\b(setup|loop|pinMode|digitalWrite|digitalRead|analogRead|Serial|begin|print|println|delay|lcd|init|backlight|setCursor|Blynk|virtualWrite|read|available)\b/g, '<span class="function">$1</span>') // Functions
-                .replace(/\b(HIGH|LOW|INPUT|OUTPUT)\b/g, '<span class="constant">$1</span>'); // Constants
+                .replace(/(\/\/.*)/g, '<span class="comment">$1</span>')
+                .replace(/(#\w+.*)/g, '<span class="preprocessor">$1</span>')
+                .replace(/(".*?")/g, '<span class="string">$1</span>')
+                .replace(/\b(void|int|char|float|if|else|while|for|true|false)\b/g, '<span class="keyword">$1</span>')
+                .replace(/\b(setup|loop|pinMode|digitalWrite|digitalRead|analogRead|Serial|begin|print|println|delay|lcd|init|backlight|setCursor|Blynk|virtualWrite|read|available)\b/g, '<span class="function">$1</span>')
+                .replace(/\b(HIGH|LOW|INPUT|OUTPUT)\b/g, '<span class="literal">$1</span>');
         } else {
+            // MATLAB highlighting
             return code
                 .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-                .replace(/('.*?')/g, '<span class="string">$1</span>') // Strings single
-                .replace(/(".*?")/g, '<span class="string">$1</span>') // Strings double
-                .replace(/(\%.*)/g, '<span class="comment">$1</span>') // Comments
-                .replace(/\b(clear|all|while|true|if|else|end|for|clc)\b/g, '<span class="keyword">$1</span>') // Keywords
-                .replace(/\b(arduino|readDigitalPin|fprintf|pause|configurePin|writeDigitalPin|readVoltage)\b/g, '<span class="function">$1</span>'); // Functions
+                .replace(/('.*?')/g, '<span class="string">$1</span>')
+                .replace(/(".*?")/g, '<span class="string">$1</span>')
+                .replace(/(\%.*)/g, '<span class="comment">$1</span>')
+                .replace(/\b(clear|all|while|true|if|else|end|for|clc)\b/g, '<span class="keyword">$1</span>')
+                .replace(/\b(arduino|readDigitalPin|fprintf|pause|configurePin|writeDigitalPin|readVoltage|disp)\b/g, '<span class="function">$1</span>');
         }
     }
 
-    // --- UI Update ---
+    // --- UI Logic ---
     function loadProgram(index) {
         const prog = programs[index];
         currentProgram = prog;
         
-        // Update sidebar active state
+        // Update sidebar UI
         document.querySelectorAll('.program-item').forEach(el => el.classList.remove('active'));
         document.getElementById('prog-' + index).classList.add('active');
 
-        // Update tab name
+        // Update tab
         document.getElementById('activeTabName').innerText = "sketch_" + prog.id + prog.ext;
 
-        // Update code area
-        const highlighted = highlightCode(prog.code, prog.lang);
-        document.getElementById('codeArea').innerHTML = highlighted;
+        // Render code
+        document.getElementById('codeArea').innerHTML = highlightCode(prog.code, prog.lang);
 
-        // Generate line numbers
+        // Render line numbers
         const linesCount = prog.code.split('\\n').length;
         let linesHTML = '';
         for (let i = 1; i <= linesCount; i++) linesHTML += i + '<br>';
         document.getElementById('lineNumbers').innerHTML = linesHTML;
         
-        // Update Console
+        // Update console
         document.getElementById('statusMessage').innerText = "Done loading.";
-        document.getElementById('consoleOutput').innerHTML = "Loaded " + prog.title + "<br>Ready.";
+        document.getElementById('consoleOutput').innerText = "Loaded: " + prog.title;
     }
 
-    // --- Initialization ---
     function init() {
         const list = document.getElementById('programList');
         programs.forEach((prog, index) => {
@@ -470,16 +302,10 @@
             list.appendChild(li);
         });
         
-        // Load first program by default
+        // Auto-load first sketch
         if(programs.length > 0) loadProgram(0);
-        
-        // Sync scrolling of line numbers
-        document.getElementById('editorContainer').addEventListener('scroll', function() {
-           // Line numbers scroll handled by flex layout naturally in this structure
-        });
     }
 
-    // --- Search Filter ---
     function filterPrograms() {
         const query = document.getElementById('searchInput').value.toLowerCase();
         programs.forEach((prog, index) => {
@@ -492,15 +318,37 @@
         });
     }
 
-    // --- Actions ---
+    function simulateCompile() {
+        if(!currentProgram) return;
+        document.getElementById('statusMessage').innerText = "Compiling sketch...";
+        document.getElementById('consoleOutput').innerHTML = "";
+        
+        setTimeout(() => {
+            document.getElementById('statusMessage').innerText = "Done compiling.";
+            document.getElementById('consoleOutput').innerHTML = 
+                "Sketch uses 3412 bytes (10%) of program storage space. Maximum is 322560 bytes.\\n" +
+                "Global variables use 214 bytes (2%) of dynamic memory, leaving 7978 bytes for local variables.";
+        }, 800);
+    }
+
+    function simulateUpload() {
+        if(!currentProgram) return;
+        simulateCompile();
+        setTimeout(() => {
+            document.getElementById('statusMessage').innerText = "Uploading...";
+            document.getElementById('consoleOutput').innerHTML += "\\n\\navrdude: AVR device initialized and ready to accept instructions\\n" +
+                "avrdude: writing flash (3412 bytes):\\n" +
+                "Writing | ################################################## | 100% 0.52s\\n" +
+                "avrdude: 3412 bytes of flash verified\\n" +
+                "avrdude done.  Thank you.\\n";
+            document.getElementById('statusMessage').innerText = "Done uploading.";
+        }, 1600);
+    }
+
     function copyCode() {
         if (!currentProgram) return;
         navigator.clipboard.writeText(currentProgram.code).then(() => {
-            const btn = document.querySelector('.action-btn');
-            const original = btn.innerHTML;
-            btn.innerHTML = 'Copied!';
             document.getElementById('statusMessage').innerText = "Code copied to clipboard.";
-            setTimeout(() => btn.innerHTML = original, 2000);
         });
     }
 
@@ -518,7 +366,6 @@
         document.getElementById('statusMessage').innerText = "File downloaded.";
     }
 
-    // Start
     window.onload = init;
 </script>
 
