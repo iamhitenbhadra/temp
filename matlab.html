@@ -3,493 +3,547 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MATLAB R2024b - Premium Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <title>MATLAB Lab Manual - Department of Mathematics, BNMIT</title>
     <style>
         :root {
-            --bg-base: #0f172a;
-            --bg-panel: #1e293b;
-            --bg-ribbon: #1e293b;
-            --border-color: #334155;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent-blue: #0ea5e9;
-            --accent-green: #22c55e;
-            --hover-bg: rgba(255, 255, 255, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --font-ui: 'Inter', system-ui, sans-serif;
-            --font-code: 'Fira Code', monospace;
+            --matlab-bg: #f3f3f3;
+            --matlab-dark-blue: #005f9e;
+            --matlab-light-blue: #e6f2fa;
+            --matlab-border: #bfbfbf;
+            --sidebar-width: 280px;
+            --code-bg: #ffffff;
+            --text-color: #222222;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            height: 100vh; 
-            font-family: var(--font-ui); 
-            background: linear-gradient(135deg, #0f172a, #1e1b4b); 
-            color: var(--text-main); 
-            overflow: hidden; 
-            font-size: 13px;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        .app-window { display: flex; flex-direction: column; height: 100vh; }
-
-        /* Title Bar */
-        .title-bar {
-            height: 36px;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(12px);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 12px; font-weight: 500; color: var(--text-muted);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            position: relative;
+        body {
+            display: flex;
+            height: 100vh;
+            background-color: var(--matlab-bg);
+            color: var(--text-color);
+            overflow: hidden;
         }
-        .window-controls { position: absolute; left: 16px; display: flex; gap: 8px; }
-        .mac-btn { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; transition: transform 0.2s; }
-        .mac-btn:hover { transform: scale(1.15); }
-        .mac-close { background: #ff5f56; }
-        .mac-min { background: #ffbd2e; }
-        .mac-max { background: #27c93f; }
 
-        /* Ribbon */
-        .ribbon-container {
-            background: rgba(30, 41, 59, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-color);
-            display: flex; flex-direction: column;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        /* --- MATLAB Style Header/Toolbar --- */
+        .top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(to bottom, #ffffff, #e1e1e1);
+            border-bottom: 1px solid var(--matlab-border);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
             z-index: 10;
         }
-        .tabs { display: flex; padding: 0 20px; background: rgba(0,0,0,0.2); }
-        .tab {
-            padding: 12px 24px; font-size: 12px; font-weight: 600;
-            color: var(--text-muted); border-bottom: 2px solid transparent;
-            cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        .tab:hover { color: var(--text-main); background: var(--hover-bg); }
-        .tab.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); }
 
-        .toolbar { display: flex; padding: 12px 20px; gap: 32px; }
-        .tool-group {
-            display: flex; align-items: center; gap: 8px;
-            padding-right: 32px; border-right: 1px solid rgba(255,255,255,0.1);
-            position: relative; padding-bottom: 12px;
-        }
-        .tool-group:last-child { border-right: none; }
-        .tool-group-title {
-            position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%);
-            font-size: 10px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase;
-        }
-        .tool-btn {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 8px 12px; border-radius: 8px; cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            color: var(--text-main); gap: 6px; border: 1px solid transparent;
-        }
-        .tool-btn:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .tool-btn:active { transform: translateY(0); }
-        .tool-btn svg {
-            width: 26px; height: 26px; fill: none; stroke: currentColor;
-            stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.2s;
-        }
-        .tool-btn.run-btn { color: var(--accent-green); }
-        .tool-btn.run-btn:hover { background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.2); }
-        .tool-btn.run-btn svg { stroke: var(--accent-green); fill: rgba(34, 197, 94, 0.15); }
-        
-        .tool-btn.copy-btn { color: var(--accent-blue); }
-        .tool-btn.copy-btn:hover { background: rgba(14, 165, 233, 0.1); border-color: rgba(14, 165, 233, 0.2); }
-
-        /* Path Bar */
-        .path-bar {
-            display: flex; align-items: center; padding: 10px 20px;
-            background: rgba(30, 41, 59, 0.6); border-bottom: 1px solid var(--border-color); gap: 12px;
-        }
-        .path-input {
-            flex-grow: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color);
-            border-radius: 8px; padding: 8px 16px; color: var(--text-main);
-            font-family: var(--font-code); font-size: 13px; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .path-input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2); }
-
-        /* Workspace */
-        .workspace { display: grid; grid-template-columns: 280px 1fr 320px; gap: 16px; padding: 16px; height: calc(100vh - 170px); }
-
-        /* Panels */
-        .panel {
-            background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px);
-            border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);
-            display: flex; flex-direction: column; overflow: hidden; box-shadow: var(--shadow-md);
-            transition: border-color 0.3s;
-        }
-        .panel:hover { border-color: rgba(255,255,255,0.15); }
-        .panel-header {
-            padding: 14px 16px; font-weight: 600; font-size: 13px;
-            color: var(--text-main); border-bottom: 1px solid rgba(255,255,255,0.08);
-            display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2);
-        }
-        .panel-header span { color: var(--text-muted); font-weight: 400; font-size: 12px; }
-
-        /* File Explorer */
-        .folder-list { padding: 10px; list-style: none; overflow-y: auto; flex: 1; }
-        .folder-list li {
-            display: flex; align-items: center; padding: 10px 14px; margin-bottom: 4px;
-            border-radius: 8px; cursor: pointer; transition: all 0.2s; color: var(--text-muted); font-size: 13px;
-        }
-        .folder-list li:hover { background: rgba(255,255,255,0.06); color: var(--text-main); transform: translateX(2px); }
-        .folder-list li.active-file { background: rgba(14, 165, 233, 0.15); color: var(--accent-blue); font-weight: 500; border-left: 3px solid var(--accent-blue); }
-        .file-icon { width: 18px; height: 18px; margin-right: 12px; fill: none; stroke: currentColor; stroke-width: 1.5; }
-
-        /* Editor Area */
-        .center-col { display: grid; grid-template-rows: 2fr 1fr; gap: 16px; height: 100%; min-height: 0; }
-        .editor-tabs { display: flex; background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.05); padding-top: 8px; padding-left: 12px; }
-        .e-tab {
-            padding: 10px 20px; background: rgba(30, 41, 59, 0.9);
-            border-radius: 8px 8px 0 0; border: 1px solid rgba(255,255,255,0.08); border-bottom: none;
-            color: var(--accent-blue); font-family: var(--font-ui); font-size: 13px; font-weight: 500;
-            display: flex; align-items: center; gap: 10px; position: relative; top: 1px;
-        }
-        
-        .editor-content {
-            display: flex; flex: 1; overflow: auto; background: #0d1117; 
-            font-family: var(--font-code); font-size: 14px; line-height: 1.6;
-        }
-        .line-numbers {
-            background: #0d1117; color: #484f58; padding: 16px 14px; text-align: right;
-            border-right: 1px solid #30363d; user-select: none; min-width: 55px;
-        }
-        .code-input { padding: 16px 20px; white-space: pre; outline: none; flex: 1; color: #c9d1d9; overflow-x: auto; tab-size: 4; }
-
-        /* Syntax Highlight */
-        .c-comment { color: #8b949e; font-style: italic; }
-        .c-string { color: #a5d6ff; }
-        .c-keyword { color: #ff7b72; font-weight: 500; }
-        .c-func { color: #d2a8ff; }
-
-        /* Command Window */
-        .cmd-window { padding: 16px 20px; font-family: var(--font-code); font-size: 14px; overflow-y: auto; flex: 1; background: #0d1117; color: #c9d1d9; }
-        .cmd-line { display: flex; align-items: center; margin-top: 10px; }
-        .prompt { color: var(--accent-green); font-weight: 600; margin-right: 12px; user-select: none; }
-        .prompt-input { border: none; outline: none; background: transparent; color: #c9d1d9; font-family: var(--font-code); font-size: 14px; flex: 1; }
-        .cmd-msg { margin-bottom: 6px; }
-        
-        /* Workspace Table */
-        .workspace-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
-        .workspace-table th { background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.05); padding: 10px 16px; color: var(--text-muted); font-weight: 500; }
-        .workspace-table td { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.03); color: var(--text-main); }
-        .workspace-table tr:hover td { background: rgba(255,255,255,0.04); }
-        .var-icon {
-            display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px;
-            background: rgba(234, 179, 8, 0.15); color: #fde047; border-radius: 6px;
-            margin-right: 12px; vertical-align: middle; font-size: 11px; font-family: var(--font-code);
-            border: 1px solid rgba(234, 179, 8, 0.3); font-weight: bold;
+        .top-bar .brand {
+            font-weight: bold;
+            color: #b13d00;
+            margin-right: 20px;
+            font-style: italic;
+            font-size: 1.1rem;
         }
 
-        ::-webkit-scrollbar { width: 12px; height: 12px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border: 3px solid transparent; background-clip: padding-box; border-radius: 6px; }
-        ::-webkit-scrollbar-thumb:hover { background-color: rgba(255,255,255,0.2); }
+        .top-bar .subtitle {
+            font-size: 0.85rem;
+            color: #555;
+            border-left: 1px solid #ccc;
+            padding-left: 10px;
+        }
+
+        /* --- Main Layout Workspace --- */
+        .workspace {
+            display: flex;
+            width: 100%;
+            height: calc(100vh - 40px);
+            margin-top: 40px;
+        }
+
+        /* --- Sidebar (Current Folder / Index) --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #ffffff;
+            border-right: 1px solid var(--matlab-border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            background-color: var(--matlab-light-blue);
+            color: var(--matlab-dark-blue);
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border-bottom: 1px solid var(--matlab-border);
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .sidebar-item {
+            padding: 10px 12px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .sidebar-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .sidebar-item.active {
+            background-color: #cee4f3;
+            font-weight: 600;
+            border-left: 4px solid var(--matlab-dark-blue);
+        }
+
+        .sidebar-item .lab-num {
+            font-size: 0.75rem;
+            color: #777;
+            text-transform: uppercase;
+        }
+
+        /* --- Main Content Area (Command Window/Editor View) --- */
+        .content-area {
+            flex-grow: 1;
+            background-color: #ffffff;
+            overflow-y: auto;
+            padding: 25px;
+        }
+
+        .lab-panel {
+            display: none;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .lab-panel.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--matlab-dark-blue);
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+            border-bottom: 2px solid var(--matlab-light-blue);
+            padding-bottom: 5px;
+        }
+
+        .objective {
+            font-style: italic;
+            color: #444;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+            margin: 20px 0 8px 0;
+        }
+
+        /* --- Code block wrapper with Copy mechanism --- */
+        .code-container {
+            position: relative;
+            background-color: var(--code-bg);
+            border: 1px solid var(--matlab-border);
+            border-radius: 4px;
+            margin: 10px 0 20px 0;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+        }
+
+        .code-header {
+            background-color: var(--matlab-bg);
+            border-bottom: 1px solid var(--matlab-border);
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            color: #555;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            background-color: #ffffff;
+            border: 1px solid var(--matlab-border);
+            padding: 3px 8px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--matlab-light-blue);
+            color: var(--matlab-dark-blue);
+        }
+
+        pre {
+            padding: 15px;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        code {
+            font-family: 'Consolas', 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #000000;
+        }
+
+        /* MATLAB code highlighting syntax simulation */
+        .m-comment { color: #228B22; font-style: italic; } /* Green comments */
+        .m-string { color: #A020F0; } /* Purple strings */
+        .m-keyword { color: #0000FF; } /* Blue keywords */
+
+        /* --- Footer notes / generic updates --- */
+        .footer-note {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #fafafa;
+            border-left: 3px solid #ff9800;
+            font-size: 0.85rem;
+            color: #555;
+        }
     </style>
 </head>
 <body>
 
-<div class="app-window">
-    <div class="title-bar">
-        <div class="window-controls">
-            <div class="mac-btn mac-close"></div><div class="mac-btn mac-min"></div><div class="mac-btn mac-max"></div>
-        </div>
-        MATLAB R2024b - Premium Edition
-    </div>
-
-    <div class="ribbon-container">
-        <div class="tabs">
-            <div class="tab">Home</div><div class="tab">Plots</div><div class="tab">Apps</div><div class="tab active">Editor</div><div class="tab">View</div>
-        </div>
-        <div class="toolbar">
-            <div class="tool-group">
-                <div class="tool-btn"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>New</div>
-                <div class="tool-btn"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>Open</div>
-                <div class="tool-btn"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>Save</div>
-                <span class="tool-group-title">File</span>
-            </div>
-            <div class="tool-group">
-                <div class="tool-btn copy-btn" onclick="copyCurrentCode()"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>Copy</div>
-                <span class="tool-group-title">Edit</span>
-            </div>
-            <div class="tool-group">
-                <div class="tool-btn run-btn" onclick="runCurrentScript()"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>Run</div>
-                <span class="tool-group-title">Run</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="path-bar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-        <input type="text" class="path-input" value="/ users / dev / projects / matlab_scripts /">
+    <div class="top-bar">
+        <div class="brand">MATLAB R2026b</div>
+        <div class="subtitle">BNMIT - Department of Mathematics | Numerical & Symbolic Computation Suite</div>
     </div>
 
     <div class="workspace">
-        <div class="panel">
-            <div class="panel-header">Current Folder <span>12 items</span></div>
-            <ul class="folder-list" id="fileList"></ul>
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <span>📁 Current Workspace Contents</span>
+            </div>
+            <ul class="sidebar-menu" id="sidebarMenu">
+                <li class="sidebar-item active" onclick="switchLab(1)">
+                    <span class="lab-num">Lab 1</span>
+                    <span>Second Order ODE with Conditions</span>
+                </li>
+                <li class="sidebar-item" onclick="switchLab(8)">
+                    <span class="lab-num">Lab 8</span>
+                    <span>Partial Differential Equations</span>
+                </li>
+                <li class="sidebar-item" onclick="switchLab(9)">
+                    <span class="lab-num">Lab 9</span>
+                    <span>Modified Euler's Method</span>
+                </li>
+                <li class="sidebar-item" onclick="switchLab(4)">
+                    <span class="lab-num">Lab Module</span>
+                    <span>Runge-Kutta 4th Order Method</span>
+                </li>
+                <li class="sidebar-item" onclick="switchLab(12)">
+                    <span class="lab-num">Lab Module</span>
+                    <span>Double & Triple Integrals</span>
+                </li>
+                <li class="sidebar-item" onclick="switchLab(16)">
+                    <span class="lab-num">Lab Module</span>
+                    <span>Gradient & Angle Between Surfaces</span>
+                </li>
+                <li class="sidebar-item" onclick="switchLab(18)">
+                    <span class="lab-num">Lab Module</span>
+                    <span>Divergence & Curl of Vector Field</span>
+                </li>
+                <li class="sidebar-item" onclick="switchLab(7)">
+                    <span class="lab-num">Lab Module</span>
+                    <span>Taylor's Series Method</span>
+                </li>
+            </ul>
         </div>
 
-        <div class="center-col">
-            <div class="panel">
-                <div class="panel-header">Editor <span id="editorPath">gradients.m</span></div>
-                <div class="editor-tabs">
-                    <div class="e-tab" id="activeTabName">gradients.m <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:6px; cursor:pointer;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>
+        <div class="content-area">
+
+            <div id="lab1" class="lab-panel active">
+                <h2>SOLUTION OF SECOND ORDER ORDINARY DIFFERENTIAL EQUATIONS WITH CONDITIONS</h2>
+                <div class="objective">Objective: To find solutions of linear differential equations of second and higher-order with constant coefficients and boundary conditions.</div>
+                
+                <div class="section-title">Syntax for general differential equation solutions:</div>
+                <div class="code-container">
+                    <div class="code-header"><span>second_order_ode.m</span><button class="copy-btn" onclick="copyCode(this)">Copy Code</button></div>
+<pre><code>clc;
+clear;
+syms y(x)
+DE = diff(y,x,3) == f(x) - a1*diff(y,x,2) - a2*diff(y,x) - a3*y;
+Sol_y(x) = dsolve(DE)</code></pre>
                 </div>
-                <div class="editor-content">
-                    <div class="line-numbers" id="lineNumbers">1</div>
-                    <div class="code-input" id="codeArea" spellcheck="false"></div>
+
+                <div class="section-title">Syntax with Initial Conditions:</div>
+                <div class="code-container">
+                    <div class="code-header"><span>ode_with_conditions.m</span><button class="copy-btn" onclick="copyCode(this)">Copy Code</button></div>
+<pre><code>clc;
+clear;
+syms y(x)
+DE = diff(y,x,3) == f(x) - a1*diff(y,x,2) - a2*diff(y,x) - a3*y;
+dy = diff(y,x);
+d2y = diff(y,x,2);
+condition1 = y(x0) == a;
+condition2 = dy(x0) == b;
+condition3 = d2y(x0) == c;
+condition = [condition1 condition2 condition3];
+Sol_y(x) = dsolve(DE, condition)</code></pre>
                 </div>
             </div>
 
-            <div class="panel">
-                <div class="panel-header">Command Window</div>
-                <div class="cmd-window" id="cmdWindow">
-                    <div class="cmd-msg" style="color:var(--text-muted);">MATLAB Premium - Academic Use. See <a href="#" style="color:var(--accent-blue); text-decoration:none;">Getting Started</a>.</div><br>
-                    <div id="cmdHistory"></div>
-                    <div class="cmd-line">
-                        <span class="prompt">fx &raquo;</span>
-                        <input type="text" class="prompt-input" id="cmdInput" autocomplete="off" autofocus>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="panel">
-            <div class="panel-header">Workspace</div>
-            <table class="workspace-table">
-                <tr><th>Name</th><th>Value</th></tr>
-                <tr><td><span class="var-icon">S</span>ans</td><td>1x1 sym</td></tr>
-                <tr><td><span class="var-icon">S</span>x</td><td>1x1 sym</td></tr>
-                <tr><td><span class="var-icon">S</span>y</td><td>1x1 sym</td></tr>
-                <tr><td><span class="var-icon">S</span>z</td><td>1x1 sym</td></tr>
-            </table>
-        </div>
-    </div>
-</div>
-
-<script>
-    const codeFiles = {
-        "gradients.m": `% To find gradient of a given function at the point p = [a b c]
-syms x y z
-phi = phi(x, y, z);
-X = [x y z];
-p = [a b c];
-grad = gradient(phi, X)
-gradp = subs(grad, X, p)
-
-% Angle between two surfaces
-grad1 = gradient(phi, X)
-grad2 = gradient(psi, X)
-grad1p = subs(grad1, X, p)
-grad2p = subs(grad2, X, p)
-n1 = norm(grad1p)          % to find |∇ϕ|
-n2 = norm(grad2p)          % to find |∇ψ|
-A = eval(grad1p/n1)
-B = eval(grad2p/n2)
-theta = acos(dot(A, B))`,
-
-        "integrals.m": `% Double integral (Constants)
-clc
-clear
-syms x y
-f = x^2 + y^2 ; % write your function here
-I = int(int(f, y, a, b), x, c, d)
-
-% Triple integral (Variables)
-clc
-clear
-syms x y z
-f = x*y*z ;  % write the function
-I = int(int(int(f, z, g1(x,y), g2(x,y)), y, f1(x), f2(x)), x, a, b)`,
-
-        "pde_solve.m": `% Solve partial differential equation: d^2u/dx^2 = x + y
-clc;
+            <div id="lab8" class="lab-panel">
+                <h2>SOLUTION AND PLOT OF PARTIAL DIFFERENTIAL EQUATION</h2>
+                <div class="objective">Objective: Find solutions to partial differential equations using the Direct Integration Method.</div>
+                
+                <div class="section-title">Example Execution File:</div>
+                <div class="code-container">
+                    <div class="code-header"><span>pde_direct_integration.m</span><button class="copy-btn" onclick="copyCode(this)">Copy Code</button></div>
+<pre><code>clc;
 clear all;
 syms u(x,y)
 syms c1(y) c2(y)
-rhs = x+y
-du_dx = int (rhs, x) + c1(y)
-u(x,y) = int (du_dx, x) + c2(y)
-display (u(x,y))`,
+rhs = x + y;
+du_dx = int(rhs, x) + c1(y);
+u(x,y) = int(du_dx, x) + c2(y);
+display(u(x,y))</code></pre>
+                </div>
+            </div>
 
-        "vector_calculus.m": `% Divergence of a Vector field
+            <div id="lab9" class="lab-panel">
+                <h2>MODIFIED EULER'S METHOD</h2>
+                <div class="objective">Objective: Numerical approach to approximate solutions of first-order ordinary differential equations.</div>
+                
+                <div class="code-container">
+                    <div class="code-header"><span>modified_euler.m</span><button class="copy-btn" onclick="copyCode(this)">Copy Code</button></div>
+<pre><code>clc;
+clear all;
+f = @(x, y) x + y;
+x0 = 0;
+y0 = 1;
+h = 0.2;
+x1 = x0 + h;
+<span class="m-comment">% Euler Formula</span>
+y1 = y0 + h * f(x0, y0);
+fprintf(<span class="m-string">'Eulers Formula %f\n'</span>, y1);
+fprintf(<span class="m-string">'Iteration y-value\n'</span>);
+for k = 1:5
+    y1 = y0 + (h/2) * (f(x0, y0) + f(x1, y1));
+    fprintf(<span class="m-string">'%d       %f\n'</span>, k, y1);
+end
+fprintf(<span class="m-string">'\nFinal value at x = %.1f is y = %.6f\n'</span>, x1, y1);</code></pre>
+                </div>
+            </div>
+
+            <div id="lab4" class="lab-panel">
+                <h2>RUNGE-KUTTA METHOD (4th ORDER)</h2>
+                <div class="objective">Objective: Solve initial value differential problems with high computational precision stability.</div>
+                
+                <div class="code-container">
+                    <div class="code-header"><span>runge_kutta_4.m</span><button class="copy-btn" onclick="copyCode(this)">Copy Code</button></div>
+<pre><code>clc;
+f = @(x,y) 3*x + y/2; <span class="m-comment">% Modify target inline function here</span>
+x = 0;
+y = 1;
+h = 0.2;
+X = 0.2;
+while X - x > 0
+    fprintf(<span class="m-string">'value of y at x = %0.2f is %f \n'</span>, x, y)
+    k1 = h * f(x, y);
+    k2 = h * f(x + h/2, y + k1/2);
+    k3 = h * f(x + h/2, y + k2/2);
+    k4 = h * f(x + h, y + k3);
+    k = (1/6) * (k1 + 2*k2 + 2*k3 + k4);
+    x = x + h;
+    y = y + k;
+end</code></pre>
+                </div>
+            </div>
+
+            <div id="lab12" class="lab-panel">
+                <h2>DOUBLE AND TRIPLE INTEGRATION</h2>
+                <div class="objective">Objective: Evaluate multi-dimensional surface regions and volumetric constants under static or dynamic limit conditions.</div>
+                
+                <div class="section-title">Case (i): Double Integral (Constant Limits)</div>
+                <div class="code-container">
+                    <div class="code-header"><span>double_integral_constant.m</span><button class="copy-btn" onclick="copyCode(this)">Copy Code</button></div>
+<pre><code>clc;
+clear;
+syms x y
+f = x*y; <span class="m-comment">% Enter system function expression</span>
+I = int(int(f, y, a, b), x, c, d)</code></pre>
+                </div>
+
+                <div class="section-title">Case (ii): Double Integral (Variable Limits)</div>
+                <div class="code-container">
+                    <div class="code-header"><span>double_integral_variable.m</span><button class="copy-btn" onclick="copyCode(this)">Copy Code</button></div>
+<pre><code>clc;
+clear;
+syms x y
+f = x+y; 
+I = int(int(f, y, f1(x), f2(x)), x, c, d)</code></pre>
+                </div>
+
+                <div class="section-title">Case (iii): Triple Integral (Variable Limits)</div>
+                <div class="code-container">
+                    <div class="code-header"><span>triple_integral.m</span><button class="copy-btn" onclick="copyCode(this)">Copy Code</button></div>
+<pre><code>clc;
+clear;
 syms x y z
-V = [v1 v2 v3];
+f = x+y+z;
+I = int(int(int(f, z, g1(x,y), g2(x,y)), y, f1(x), f2(x)), x, a, b)</code></pre>
+                </div>
+            </div>
+
+            <div id="lab16" class="lab-panel">
+                <h2>GRADIENT OF SCALAR FIELD & ANGLE BETWEEN SURFACES</h2>
+                <div class="objective">Objective: Determine multidirectional surface normal representations across geometric intersection points.</div>
+                
+                <div class="section-title">Part A: Gradient Evaluation</div>
+                <div class="code-container">
+                    <div class="code-header"><span>scalar_gradient.m</span><button class="copy-btn" onclick="copyCode(this)">Copy Code</button></div>
+<pre><code>syms x y z
+phi = x^2 + y^2 + z^2; <span class="m-comment">% Target operational function template</span>
 X = [x y z];
-p = [a b c];
-div = divergence(V, X)
+p = [1 2 3]; <span class="m-comment">% Point vector coordinate parameters</span>
+grad = gradient(phi, X);
+gradp = subs(grad, X, p)</code></pre>
+                </div>
+
+                <div class="section-title">Part B: Angle Matrix Interface between Intersecting Environments</div>
+                <div class="code-container">
+                    <div class="code-header"><span>angle_between_surfaces.m</span><button class="copy-btn" onclick="copyCode(this)">Copy Code</button></div>
+<pre><code>syms x y z
+phi = x^2 + y^2 + z^2;
+psi = x+y+z;
+X = [x y z];
+p = [1 -1 2];
+grad1 = gradient(phi, X);
+grad2 = gradient(psi, X);
+grad1p = subs(grad1, X, p);
+grad2p = subs(grad2, X, p);
+n1 = norm(grad1p); <span class="m-comment">% Finds |grad phi|</span>
+n2 = norm(grad2p); <span class="m-comment">% Finds |grad psi|</span>
+A = eval(grad1p/n1);
+B = eval(grad2p/n2);
+theta = acos(dot(A, B))</code></pre>
+                </div>
+            </div>
+
+            <div id="lab18" class="lab-panel">
+                <h2>DIVERGENCE, CURL, & FIELD BEHAVIOR</h2>
+                <div class="objective">Objective: Analyze directional fluid vectors to classify whether a field is Solenoidal (div = 0) or Irrotational (curl = 0).</div>
+                
+                <div class="section-title">Part A: Divergence (Solenoidal Test)</div>
+                <div class="code-container">
+                    <div class="code-header"><span>vector_divergence.m</span><button class="copy-btn" onclick="copyCode(this)">Copy Code</button></div>
+<pre><code>syms x y z
+V = [x^2, y^2, z^2]; <span class="m-comment">% Input Vector field</span>
+X = [x y z];
+p = [1 1 1];
+div = divergence(V, X);
 divp = subs(div, X, p)
 if(divp == 0)
-    display('since divp is zero, hence Vector field is Solenoidal')
+    display(<span class="m-string">'since divp is zero, hence Vector field is Solenoidal'</span>)
 else
-    display('since divp is non zero, hence Vector field is not Solenoidal')
-end
+    display(<span class="m-string">'since divp is non zero, hence Vector field is not Solenoidal'</span>)
+end</code></pre>
+                </div>
 
-% Curl of a Vector field
-curl_v = curl(V, X)
-curlp = subs(curl_v, X, p)`,
+                <div class="section-title">Part B: Curl Formulation (Irrotational Test)</div>
+                <div class="code-container">
+                    <div class="code-header"><span>vector_curl.m</span><button class="copy-btn" onclick="copyCode(this)">Copy Code</button></div>
+<pre><code>syms x y z
+V = [x^2, y^2, z^2];
+X = [x y z];
+p = [1 1 1];
+curl_val = curl(V, X);
+curlp = subs(curl_val, X, p)
+if(curlp == [0 0 0])
+    display(<span class="m-string">'since curlp is zero, hence Vector field is irrotational'</span>)
+else
+    display(<span class="m-string">'since curlp is non zero, hence Vector field is not irrotational'</span>)
+end</code></pre>
+                </div>
+            </div>
 
-        "ode_solve.m": `% Syntax to solve linear differential equation with initial conditions
-clc;
-clear;
-syms y(x)
-DE=diff(y,x,3)== f(x)-a1*diff(y,x,2)-a2*diff(y,x)-a3*y; dy=diff(y,x);
-d2y=diff(y,x,2);
-condition1=y(x0)==a;
-condition2=dy(x0)==b;
-condition3=d2y(x0)==c;
-condition = [condition1 condition2 condition3];
-Sol_y(x)=dsolve(DE, condition)`,
-
-        "taylor_series.m": `% Taylor's series method
-clc;
+            <div id="lab7" class="lab-panel">
+                <h2>TAYLOR'S SERIES APPROXIMATION METHOD</h2>
+                <div class="objective">Objective: Track recursive expansion orders for solving higher degree nonlinear operational forms.</div>
+                
+                <div class="code-container">
+                    <div class="code-header"><span>taylor_series_method.m</span><button class="copy-btn" onclick="copyCode(this)">Copy Code</button></div>
+<pre><code>clc;
 clear all;
 syms y x ;
-dy = f(x,y);
-ix = x0;
-iy = y0;
-a1 = subs(dy, [x, y], [ix, iy])
-d2y = diff(dy, x) + diff(dy, y) * dy
-a2 = subs(d2y, [x, y], [ix, iy])
-d3y = diff(d2y, x) + diff(d2y, y) * dy
-a3 = subs(d3y, [x, y], [ix, iy])
-d4y = diff(d3y, x) + diff(d3y, y) * dy
-a4 = subs(d4y, [x, y], [ix, iy])
-x = x1;
-ans = iy + (x - ix)*a1 + ((x - ix)^2*a2)/factorial(2) + ((x - ix)^3*a3)/factorial(3)+((x - ix)^4*a4)/factorial(4)
-fprintf('hence y(%.2f)=%.6f\\n',x,ans)`,
+dy = x - y^2; <span class="m-comment">% Define function f(x,y)</span>
+ix = 0;       <span class="m-comment">% initial x0</span>
+iy = 1;       <span class="m-comment">% initial y0</span>
+a1 = subs(dy, [x, y], [ix, iy]);
+d2y = diff(dy, x) + diff(dy, y) * dy;
+a2 = subs(d2y, [x, y], [ix, iy]);
+d3y = diff(d2y, x) + diff(d2y, y) * dy;
+a3 = subs(d3y, [x, y], [ix, iy]);
+d4y = diff(d3y, x) + diff(d3y, y) * dy;
+a4 = subs(d4y, [x, y], [ix, iy]);
+x1 = 0.1;     <span class="m-comment">% Evaluation point target</span>
+ans = iy + (x - ix)*a1 + ((x - ix)^2*a2)/factorial(2) + ((x - ix)^3*a3)/factorial(3)+((x - ix)^4*a4)/factorial(4);
+fprintf(<span class="m-string">'hence y(%.2f)=%.6f\n'</span>, x1, ans);</code></pre>
+                </div>
+            </div>
 
-        "runge_kutta.m": `% Runge-Kutta method of 4th order
-clc;
-f=@(x,y) x+y;
-x=0;
-y=1;
-h=0.2;
-X=0.4;
-while X-x>0
-    fprintf('value of y at x = %0.2f is %f \\n', x,y)
-    k1=h.*f(x,y)
-    k2=h.*f(x+h/2 , y+k1/2)
-    k3=h.*f(x+h/2 , y+k2/2)
-    k4=h.*f(x+h , y+k3)
-    k=(1/6).*(k1+2.*k2+2.*k3+k4)
-    x=x+h
-    y=y+k
-end`,
+            <div class="footer-note">
+                <strong>Pro-tip:</strong> Before execution inside the MATLAB Engine, ensure variables definitions mirror respective coordinate frameworks (`syms x y z`).
+            </div>
 
-        "modified_euler.m": `% Modified Euler's method
-clc;
-clear all;
-f=@(x, y) x+y;
-x0=0;
-y0=1;
-h=0.2;
-x1=x0+h;
-%Euler Formula
-y1 = y0 + h*f(x0, y0);
-fprintf ('Eulers Formula %f\\n', y1);
-fprintf ('Iteration  y-value\\n');
-for k=1:5
-    y1 = y0 + (h/2) *(f(x0, y0)+ f(x1, y1));
-    fprintf ('%d        %f\\n', k, y1);
-end
-fprintf ('\\n Final value at x = %.1f is y = %.6f\\n', x1, y1);`
-    };
+        </div>
+    </div>
 
-    let currentFileName = "gradients.m";
-
-    function highlightMATLAB(code) {
-        let html = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        html = html.replace(/('.*?')/g, '<span class="c-string">$1</span>');
-        html = html.replace(/(%.*)/g, '<span class="c-comment">$1</span>');
-        
-        const keywords = ['clc','clear','all','syms','int','diff','dsolve','subs','if','else','end','display','fprintf','while','for','eval','norm','dot','acos','gradient','divergence','curl'];
-        const regex = new RegExp(`\\b(${keywords.join('|')})\\b(?![^<]*>)`, 'g');
-        html = html.replace(regex, '<span class="c-keyword">$1</span>');
-        
-        return html;
-    }
-
-    function loadFile(fileName) {
-        currentFileName = fileName;
-        const code = codeFiles[fileName];
-        
-        document.getElementById('activeTabName').innerHTML = `${fileName} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:8px; cursor:pointer; opacity:0.7"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
-        document.getElementById('editorPath').innerText = fileName;
-        
-        document.getElementById('codeArea').innerHTML = highlightMATLAB(code);
-        
-        const linesCount = code.split('\\n').length;
-        let linesHTML = '';
-        for (let i = 1; i <= linesCount; i++) linesHTML += i + '<br>';
-        document.getElementById('lineNumbers').innerHTML = linesHTML;
-
-        document.querySelectorAll('.folder-list li').forEach(li => {
-            if(li.innerText.trim() === fileName) li.classList.add('active-file');
-            else li.classList.remove('active-file');
-        });
-    }
-
-    const fileListEl = document.getElementById('fileList');
-    Object.keys(codeFiles).forEach(file => {
-        const li = document.createElement('li');
-        li.innerHTML = `<svg class="file-icon" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg> ${file}`;
-        li.onclick = () => loadFile(file);
-        fileListEl.appendChild(li);
-    });
-
-    loadFile("gradients.m");
-
-    const cmdInput = document.getElementById('cmdInput');
-    const cmdHistory = document.getElementById('cmdHistory');
-    const cmdWindow = document.getElementById('cmdWindow');
-
-    function appendToCmd(text, type="msg") {
-        const div = document.createElement('div');
-        div.className = `cmd-msg ${type === 'err' ? 'cmd-err' : (type === 'success' ? 'cmd-success' : '')}`;
-        div.innerHTML = text;
-        cmdHistory.appendChild(div);
-        cmdWindow.scrollTop = cmdWindow.scrollHeight;
-    }
-
-    function runCurrentScript() {
-        appendToCmd(`<span class="prompt">fx &raquo;</span> run ${currentFileName}`);
-        appendToCmd(`<i>Running script ${currentFileName}... Done.</i>`, 'success');
-    }
-
-    function copyCurrentCode() {
-        const code = codeFiles[currentFileName];
-        navigator.clipboard.writeText(code).then(() => {
-            appendToCmd(`<span class="prompt">fx &raquo;</span> copy ${currentFileName}`);
-            appendToCmd(`<i>Code copied to clipboard successfully!</i>`, 'success');
-        }).catch(err => {
-            appendToCmd(`Failed to copy code: ${err}`, 'err');
-        });
-    }
-
-    cmdInput.addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            const val = this.value;
-            appendToCmd(`<span class="prompt">fx &raquo;</span> ${val}`);
+    <script>
+        function switchLab(labNumber) {
+            // Remove active status from all labs and sidebar items
+            document.querySelectorAll('.lab-panel').forEach(panel => panel.classList.remove('active'));
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
             
-            if (val.trim() !== '') {
-                if(val === 'clc') {
-                    cmdHistory.innerHTML = '';
-                } else if (codeFiles[val + '.m']) {
-                    loadFile(val + '.m');
-                    runCurrentScript();
-                } else {
-                    appendToCmd(`Unrecognized function or variable '${val.split(' ')[0]}'.`, 'err');
-                }
-            }
-            this.value = '';
+            // Activate selected components
+            document.getElementById('lab' + labNumber).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
-    });
 
-    cmdWindow.addEventListener('click', () => cmdInput.focus());
-</script>
+        function copyCode(button) {
+            const preBlock = button.parentElement.nextElementSibling;
+            const textToCopy = preBlock.innerText;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = button.innerText;
+                button.innerText = "Copied!";
+                button.style.backgroundColor = "#4caf50";
+                button.style.color = "#ffffff";
+                
+                setTimeout(() => {
+                    button.innerText = originalText;
+                    button.style.backgroundColor = "#ffffff";
+                    button.style.color = "inherit";
+                }, 1500);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+    </script>
 </body>
 </html>
