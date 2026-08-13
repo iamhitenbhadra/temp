@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><title>Pomodoro</title><link rel="stylesheet" href="styles.css"></head>
+<body>
+  <audio id="au" src="chime.mp3" loop></audio>
+  <div class="card">
+    <h1>Pomodoro</h1>
+    <div class="modes">
+      <button class="act" onclick="m(1500,this)">Pomodoro</button>
+      <button onclick="m(300,this)">Short Break</button>
+      <button onclick="m(900,this)">Long Break</button>
+    </div>
+    <div id="t">25:00</div>
+    <div class="btns">
+      <button id="b" onclick="toggle()">Start</button>
+      <button onclick="reset()">Reset</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
