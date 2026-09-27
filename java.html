@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP Java - Module 1 & 2 Program Repository</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#090d16',
+                        panelBg: '#111827',
+                        cardBg: '#1a2234',
+                        borderSubtle: '#26334d',
+                        accentBlue: '#3b82f6',
+                        accentGlow: '#60a5fa'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['Fira Code', 'JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Inter Font & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #26334d;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b82f6;
+        }
+        body, html {
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #090d16;
+            color: #f3f4f6;
+        }
+        pre code {
+            font-family: 'Fira Code', monospace;
+        }
+    </style>
+<style data-bard-injected="true">
+@media screen {
+    html {
+        background-color: #ffffff;
+    }
+    body {
+        padding: 8px 0 24px 0;
+    }
+}
+@media screen and (prefers-color-scheme: dark) {
+    html {
+        background-color: #1f1f1f;
+    }
+}
+@media screen and (max-width: 600px) {
+    body {
+        padding: 4px 0 16px 0;
+        margin: 0 auto;
+    }
+}
+</style></head>
+<body class="bg-darkBg h-screen text-slate-100 flex flex-col antialiased selection:bg-blue-500 selection:text-white">
+
+    <div class="flex flex-col lg:flex-row h-full w-full overflow-hidden">
+        
+        <!-- Sidebar Navigation (Fixed height with independent inner scroll) -->
+        <aside class="w-full lg:w-80 bg-panelBg border-r border-borderSubtle flex flex-col h-full shrink-0">
+            <!-- Header Brand -->
+            <div class="p-5 border-b border-borderSubtle shrink-0">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/30">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-sm text-white tracking-wide">BNMIT • 25ISE135</h1>
+                        <p class="text-xs text-slate-400">Object Oriented Programming</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Filter Bar -->
+            <div class="p-4 border-b border-borderSubtle shrink-0">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-search text-xs"></i>
+                    </span>
+                    <input type="text" id="searchInput" placeholder="Search programs..." 
+                        class="w-full pl-9 pr-4 py-2 bg-cardBg border border-borderSubtle rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors">
+                </div>
+            </div>
+
+            <!-- Vertical Stacked Navigation List (Scrollable independently) -->
+            <nav id="sidebarNav" class="flex-1 overflow-y-auto p-4 space-y-6">
+                <!-- Populated dynamically via JavaScript -->
+            </nav>
+
+            <!-- Footer Info -->
+            <div class="p-4 border-t border-borderSubtle text-xs text-slate-500 flex justify-between items-center shrink-0">
+                <span>Modules 1 &amp; 2 Index</span>
+                <span class="bg-cardBg px-2 py-1 rounded text-slate-400 font-mono">Java SE</span>
+            </div>
+        </aside>
+
+        <!-- Main Content Area (Independent Scrollable Container) -->
+        <main class="flex-1 flex flex-col h-full overflow-y-auto">
+            <!-- Top Navbar / Info Banner -->
+            <header class="bg-panelBg border-b border-borderSubtle px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sticky top-0 z-20 backdrop-blur-md bg-opacity-90 shrink-0">
+                <div>
+                    <span id="activeModuleBadge" class="inline-block px-2.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500/20 text-blue-400 mb-1 tracking-wider uppercase">Module 1</span>
+                    <h2 id="activeHeaderTitle" class="text-lg font-bold text-white tracking-tight">Rupee to Dollar Converter</h2>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="expandAll()" class="px-3 py-1.5 bg-cardBg hover:bg-slate-800 border border-borderSubtle text-xs font-medium text-slate-300 rounded-lg transition-colors flex items-center space-x-1.5">
+                        <i class="fa-solid fa-expand text-[10px]"></i>
+                        <span>Expand All</span>
+                    </button>
+                    <button onclick="collapseAll()" class="px-3 py-1.5 bg-cardBg hover:bg-slate-800 border border-borderSubtle text-xs font-medium text-slate-300 rounded-lg transition-colors flex items-center space-x-1.5">
+                        <i class="fa-solid fa-compress text-[10px]"></i>
+                        <span>Collapse All</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Programs Container Feed -->
+            <div id="programsContainer" class="p-6 max-w-5xl w-full mx-auto space-y-8 pb-16">
+                <!-- Dynamically rendered program cards -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const modulesData = [
+            {
+                moduleTitle: "Module 1: Basics of Java & OOP",
+                moduleId: "mod1",
+                programs: [
+                    {
+                        id: "m1-p1",
+                        title: "1. Rupees to Dollar Converter",
+                        filename: "RupeeToDollar.java",
+                        desc: "Write a program to convert rupees to dollar. 60 rupees = 1 dollar.",
+                        code: `import java.util.Scanner;
+
+public class RupeeToDollar {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter amount in Rupees: ");
+        double rupees = scanner.nextDouble();
+        
+        double dollars = rupees / 60.0;
+        System.out.println(rupees + " Rupees is equal to " + dollars + " Dollars.");
+        scanner.close();
+    }
+}`
+                    },
+                    {
+                        id: "m1-p2",
+                        title: "2. Student Percentage Calculator",
+                        filename: "StudentPercentage.java",
+                        desc: "Write a program that calculates the percentage marks of the student if marks of 6 subjects are given.",
+                        code: `import java.util.Scanner;
+
+public class StudentPercentage {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        double totalMarks = 0;
+        int numSubjects = 6;
+        
+        System.out.println("Enter marks for 6 subjects (out of 100 each):");
+        for (int i = 1; i <= numSubjects; i++) {
+            System.out.print("Subject " + i + ": ");
+            totalMarks += scanner.nextDouble();
+        }
+        
+        double percentage = (totalMarks / (numSubjects * 100)) * 100;
+        System.out.println("Total Marks: " + totalMarks + " / 600");
+        System.out.println("Percentage: " + percentage + "%");
+        scanner.close();
+    }
+}`
+                    },
+                    {
+                        id: "m1-p3",
+                        title: "3. Mathematical Operations",
+                        filename: "MathOperations.java",
+                        desc: "Write a program to enter two numbers and perform mathematical operations on them.",
+                        code: `import java.util.Scanner;
+
+public class MathOperations {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.print("Enter first number: ");
+        double num1 = scanner.nextDouble();
+        
+        System.out.print("Enter second number: ");
+        double num2 = scanner.nextDouble();
+        
+        System.out.println("\\n--- Results ---");
+        System.out.println("Addition: " + (num1 + num2));
+        System.out.println("Subtraction: " + (num1 - num2));
+        System.out.println("Multiplication: " + (num1 * num2));
+        
+        if (num2 != 0) {
+            System.out.println("Division: " + (num1 / num2));
+            System.out.println("Modulus: " + (num1 % num2));
+        } else {
+            System.out.println("Division and Modulus by zero are not allowed.");
+        }
+        scanner.close();
+    }
+}`
+                    },
+                    {
+                        id: "m1-p4",
+                        title: "4. Diamond Pattern Printer",
+                        filename: "DiamondPattern.java",
+                        desc: "Write an interactive program to print a diamond shape.",
+                        code: `import java.util.Scanner;
+
+public class DiamondPattern {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the number of rows (half of the diamond): ");
+        int n = scanner.nextInt();
+        
+        // Upper half
+        for (int i = 1; i <= n; i++) {
+            for (int j = i; j < n; j++) {
+                System.out.print(" ");
+            }
+            for (int j = 1; j <= (2 * i - 1); j++) {
+                System.out.print("*");
+            }
+            System.out.println();
+        }
+        
+        // Lower half
+        for (int i = n - 1; i >= 1; i--) {
+            for (int j = n; j > i; j--) {
+                System.out.print(" ");
+            }
+            for (int j = 1; j <= (2 * i - 1); j++) {
+                System.out.print("*");
+            }
+            System.out.println();
+        }
+        scanner.close();
+    }
+}`
+                    },
+                    {
+                        id: "m1-p5",
+                        title: "5. Box Class & Constructors",
+                        filename: "BoxDemo.java",
+                        desc: "Program to define class Box and constructors. Demonstrate constructors.",
+                        code: `class Box {
+    double width, height, depth;
+
+    // Default constructor
+    Box() {
+        width = height = depth = 0;
+    }
+
+    // Parameterized constructor (Cube)
+    Box(double len) {
+        width = height = depth = len;
+    }
+
+    // Parameterized constructor (Cuboid)
+    Box(double w, double h, double d) {
+        width = w;
+        height = h;
+        depth = d;
+    }
+
+    double volume() {
+        return width * height * depth;
+    }
+}
+
+public class BoxDemo {
+    public static void main(String[] args) {
+        Box box1 = new Box();
+        Box box2 = new Box(5.0);
+        Box box3 = new Box(3.0, 4.0, 5.0);
+
+        System.out.println("Volume of box1 (Default): " + box1.volume());
+        System.out.println("Volume of box2 (Cube): " + box2.volume());
+        System.out.println("Volume of box3 (Cuboid): " + box3.volume());
+    }
+}`
+                    },
+                    {
+                        id: "m1-p6",
+                        title: "6. Method Overloading Demo",
+                        filename: "MethodOverloadingDemo.java",
+                        desc: "Program to define class Addition, methods and objects. Demonstrate method overloading to add 2 integers, 3 floating numbers and 2 strings.",
+                        code: `class Addition {
+    // Add two integers
+    int add(int a, int b) {
+        return a + b;
+    }
+
+    // Add three floating-point numbers
+    double add(double a, double b, double c) {
+        return a + b + c;
+    }
+
+    // Concatenate two strings
+    String add(String a, String b) {
+        return a + b;
+    }
+}
+
+public class MethodOverloadingDemo {
+    public static void main(String[] args) {
+        Addition obj = new Addition();
+
+        System.out.println("Sum of 2 integers (10, 20): " + obj.add(10, 20));
+        System.out.println("Sum of 3 floats (5.5, 2.1, 3.3): " + obj.add(5.5, 2.1, 3.3));
+        System.out.println("Concatenation of 2 strings (\"Hello, \", \"World!\"): " + obj.add("Hello, ", "World!"));
+    }
+}`
+                    }
+                ]
+            },
+            {
+                moduleTitle: "Module 2: Strings & Inheritance",
+                moduleId: "mod2",
+                programs: [
+                    {
+                        id: "m2-p1",
+                        title: "1. String Length & Second Half",
+                        filename: "SecondHalfString.java",
+                        desc: "Write a program to find length of string and print second half of the string.",
+                        code: `import java.util.Scanner;
+
+public class SecondHalfString {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a string: ");
+        String str = scanner.nextLine();
+        
+        int length = str.length();
+        System.out.println("Length of the string: " + length);
+        System.out.println("Second half of the string: " + str.substring(length / 2));
+        
+        scanner.close();
+    }
+}`
+                    },
+                    {
+                        id: "m2-p2",
+                        title: "2. Vowels & Consonants Counter",
+                        filename: "VowelConsonantCount.java",
+                        desc: "Write a program to accept a line and check how many consonants and vowels are there in line.",
+                        code: `import java.util.Scanner;
+
+public class VowelConsonantCount {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a line of text: ");
+        String line = scanner.nextLine().toLowerCase();
+        
+        int vowels = 0, consonants = 0;
+        for (int i = 0; i < line.length(); i++) {
+            char ch = line.charAt(i);
+            if (ch >= 'a' && ch <= 'z') {
+                if (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u') {
+                    vowels++;
+                } else {
+                    consonants++;
+                }
+            }
+        }
+        
+        System.out.println("Total Vowels: " + vowels);
+        System.out.println("Total Consonants: " + consonants);
+        scanner.close();
+    }
+}`
+                    },
+                    {
+                        id: "m2-p3",
+                        title: "3. Capital Letter Word Counter",
+                        filename: "CapitalWordCount.java",
+                        desc: "Write a program to count the number of words that start with capital letters.",
+                        code: `import java.util.Scanner;
+
+public class CapitalWordCount {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a sentence: ");
+        String sentence = scanner.nextLine();
+        
+        String[] words = sentence.split("\\\\s+");
+        int count = 0;
+        
+        for (String word : words) {
+            if (!word.isEmpty() && Character.isUpperCase(word.charAt(0))) {
+                count++;
+            }
+        }
+        
+        System.out.println("Number of words starting with a capital letter: " + count);
+        scanner.close();
+    }
+}`
+                    },
+                    {
+                        id: "m2-p4",
+                        title: "4. Palindrome Checker",
+                        filename: "PalindromeChecker.java",
+                        desc: "Write a program to find that given number or string is palindrome or not.",
+                        code: `import java.util.Scanner;
+
+public class PalindromeChecker {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a string or number: ");
+        String input = scanner.next();
+        
+        String reversed = new StringBuilder(input).reverse().toString();
+        
+        if (input.equalsIgnoreCase(reversed)) {
+            System.out.println("\\"" + input + "\\" is a Palindrome.");
+        } else {
+            System.out.println("\\"" + input + "\\" is NOT a Palindrome.");
+        }
+        scanner.close();
+    }
+}`
+                    },
+                    {
+                        id: "m2-p5",
+                        title: "5. Cumulative Vowel Counter",
+                        filename: "CumulativeVowelCounter.java",
+                        desc: "Create a class which asks user for sentence, displays vowel counts, runs until 'quit', and displays total cumulative count.",
+                        code: `import java.util.Scanner;
+
+public class CumulativeVowelCounter {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int totalA = 0, totalE = 0, totalI = 0, totalO = 0, totalU = 0;
+
+        while (true) {
+            System.out.print("Enter a sentence (type 'quit' to exit): ");
+            String sentence = scanner.nextLine();
+            
+            if (sentence.trim().equalsIgnoreCase("quit")) {
+                break;
+            }
+
+            int countA = 0, countE = 0, countI = 0, countO = 0, countU = 0;
+            for (char ch : sentence.toLowerCase().toCharArray()) {
+                switch (ch) {
+                    case 'a': countA++; totalA++; break;
+                    case 'e': countE++; totalE++; break;
+                    case 'i': countI++; totalI++; break;
+                    case 'o': countO++; totalO++; break;
+                    case 'u': countU++; totalU++; break;
+                }
+            }
+
+            System.out.println("Vowels in this sentence -> A: " + countA + ", E: " + countE + ", I: " + countI + ", O: " + countO + ", U: " + countU);
+        }
+
+        System.out.println("\\n--- Total Vowel Count Across All Sentences ---");
+        System.out.println("A: " + totalA + ", E: " + totalE + ", I: " + totalI + ", O: " + totalO + ", U: " + totalU);
+        scanner.close();
+    }
+}`
+                    },
+                    {
+                        id: "m2-p6",
+                        title: "6. Interactive String Pyramid",
+                        filename: "StringPyramid.java",
+                        desc: "Write an interactive program to print a string entered in a pyramid form.",
+                        code: `import java.util.Scanner;
+
+public class StringPyramid {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a string: ");
+        String str = scanner.next();
+        int n = str.length();
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                System.out.print(" ");
+            }
+            for (int j = 0; j <= i; j++) {
+                System.out.print(str.charAt(j) + " ");
+            }
+            System.out.println();
+        }
+        scanner.close();
+    }
+}`
+                    },
+                    {
+                        id: "m2-p7",
+                        title: "7. Shape Inheritance & Overriding",
+                        filename: "ShapeOverrideDemo.java",
+                        desc: "Program to define base class Shapes with methods, and derived classes Square, Triangle, Rectangle, and Circle showing method overriding.",
+                        code: `class Shapes {
+    void area() {
+        System.out.println("Area calculation method in base class.");
+    }
+}
+
+class Square extends Shapes {
+    double side;
+    Square(double side) { this.side = side; }
+    @Override
+    void area() {
+        System.out.println("Area of Square: " + (side * side));
+    }
+}
+
+class Triangle extends Shapes {
+    double base, height;
+    Triangle(double base, double height) { this.base = base; this.height = height; }
+    @Override
+    void area() {
+        System.out.println("Area of Triangle: " + (0.5 * base * height));
+    }
+}
+
+class Rectangle extends Shapes {
+    double length, width;
+    Rectangle(double length, double width) { this.length = length; this.width = width; }
+    @Override
+    void area() {
+        System.out.println("Area of Rectangle: " + (length * width));
+    }
+}
+
+class Circle extends Shapes {
+    double radius;
+    Circle(double radius) { this.radius = radius; }
+    @Override
+    void area() {
+        System.out.println("Area of Circle: " + (Math.PI * radius * radius));
+    }
+}
+
+public class ShapeOverrideDemo {
+    public static void main(String[] args) {
+        Shapes shape;
+
+        shape = new Square(4.0);
+        shape.area();
+
+        shape = new Triangle(3.0, 5.0);
+        shape.area();
+
+        shape = new Rectangle(4.0, 6.0);
+        shape.area();
+
+        shape = new Circle(3.0);
+        shape.area();
+    }
+}`
+                    }
+                ]
+            }
+        ];
+
+        function renderApp() {
+            const sidebarNav = document.getElementById('sidebarNav');
+            const programsContainer = document.getElementById('programsContainer');
+
+            let sidebarHtml = '';
+            let contentHtml = '';
+
+            modulesData.forEach(mod => {
+                sidebarHtml += `
+                    <div class="space-y-2">
+                        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1 bg-cardBg/50 rounded">${mod.moduleTitle}</div>
+                        <div class="space-y-1">
+                `;
+
+                mod.programs.forEach(prog => {
+                    sidebarHtml += `
+                        <a href="#${prog.id}" onclick="setActiveProgram('${prog.id}', '${mod.moduleTitle}')" id="nav-${prog.id}" 
+                            class="sidebar-item flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-cardBg transition-all group">
+                            <span class="truncate pr-2">${prog.title}</span>
+                            <i class="fa-solid fa-chevron-right text-[9px] text-slate-600 group-hover:text-blue-400 transition-colors"></i>
+                        </a>
+                    `;
+
+                    contentHtml += `
+                        <section id="${prog.id}" class="program-card bg-panelBg border border-borderSubtle rounded-xl overflow-hidden shadow-xl transition-all hover:border-slate-700">
+                            <!-- Card Header -->
+                            <div class="px-6 py-4 bg-cardBg border-b border-borderSubtle flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                <div>
+                                    <div class="flex items-center space-x-2 mb-1">
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-500/10 text-blue-400">${mod.moduleTitle.split(':')[0]}</span>
+                                        <span class="text-xs font-mono text-slate-400"><i class="fa-regular fa-file-code mr-1"></i>${prog.filename}</span>
+                                    </div>
+                                    <h3 class="text-base font-bold text-white tracking-tight">${prog.title}</h3>
+                                </div>
+                                <button onclick="copyCode(this, '${prog.id}')" 
+                                    class="inline-flex items-center space-x-2 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 active:scale-95 border border-borderSubtle rounded-lg text-xs font-medium text-slate-200 transition-all shadow-sm">
+                                    <i class="fa-regular fa-copy text-blue-400"></i>
+                                    <span>Copy Code</span>
+                                </button>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="px-6 py-3 bg-panelBg/50 border-b border-borderSubtle/50 text-xs text-slate-300">
+                                <span class="font-semibold text-slate-400">Problem:</span> ${prog.desc}
+                            </div>
+
+                            <!-- Code Block Viewer -->
+                            <div class="relative bg-[#070b12] p-4 sm:p-6 overflow-x-auto">
+                                <pre><code id="code-${prog.id}" class="text-xs sm:text-sm text-slate-200 leading-relaxed">${escapeHtml(prog.code)}</code></pre>
+                            </div>
+                        </section>
+                    `;
+                });
+
+                sidebarHtml += `</div></div>`;
+            });
+
+            sidebarNav.innerHTML = sidebarHtml;
+            programsContainer.innerHTML = contentHtml;
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function copyCode(btn, progId) {
+            const codeElem = document.getElementById(`code-${progId}`);
+            const textToCopy = codeElem.textContent;
+
+            const textarea = document.createElement('textarea');
+            textarea.value = textToCopy;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    const originalHtml = btn.innerHTML;
+                    btn.innerHTML = `<i class="fa-solid fa-check text-emerald-400"></i><span class="text-emerald-400">Copied!</span>`;
+                    btn.classList.add('border-emerald-500/50');
+                    setTimeout(() => {
+                        btn.innerHTML = originalHtml;
+                        btn.classList.remove('border-emerald-500/50');
+                    }, 2000);
+                }
+            } catch (err) {
+                console.error('Copy error:', err);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function setActiveProgram(progId, modTitle) {
+            document.querySelectorAll('.sidebar-item').forEach(el => {
+                el.classList.remove('bg-blue-600/10', 'text-white', 'border-l-2', 'border-blue-500');
+            });
+            const activeNav = document.getElementById(`nav-${progId}`);
+            if (activeNav) {
+                activeNav.classList.add('bg-blue-600/10', 'text-white', 'border-l-2', 'border-blue-500');
+            }
+
+            document.getElementById('activeModuleBadge').textContent = modTitle.split(':')[0];
+            
+            modulesData.forEach(mod => {
+                mod.programs.forEach(p => {
+                    if (p.id === progId) {
+                        document.getElementById('activeHeaderTitle').textContent = p.title;
+                    }
+                });
+            });
+        }
+
+        function expandAll() {
+            document.querySelectorAll('.program-card').forEach(card => {
+                card.style.display = 'block';
+            });
+        }
+
+        function collapseAll() {
+            // Optional collapse logic if needed
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderApp();
+            if (modulesData.length > 0 && modulesData[0].programs.length > 0) {
+                setActiveProgram(modulesData[0].programs[0].id, modulesData[0].moduleTitle);
+            }
+
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                document.querySelectorAll('.program-card').forEach(card => {
+                    const text = card.textContent.toLowerCase();
+                    if (text.includes(term)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
