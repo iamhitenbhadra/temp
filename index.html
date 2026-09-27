@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Hub • BNMIT 25ISE135</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#090d16',
+                        panelBg: '#111827',
+                        cardBg: '#1a2234',
+                        borderSubtle: '#26334d',
+                        accentBlue: '#3b82f6',
+                        accentGlow: '#60a5fa'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['Fira Code', 'JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #26334d;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b82f6;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #090d16;
+            color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="bg-darkBg min-h-screen text-slate-100 flex flex-col antialiased selection:bg-blue-500 selection:text-white">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-panelBg/90 backdrop-blur-md border-b border-borderSubtle sticky top-0 z-30 px-6 py-4">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/25">
+                    <i class="fa-solid fa-layer-group"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-sm text-white tracking-wide flex items-center gap-2">
+                        BNMIT • 25ISE135
+                        <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-500/20 text-blue-400">Hub</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Lab &amp; Coursework Directory</p>
+                </div>
+            </div>
+
+            <!-- GitHub / Status indicators -->
+            <div class="flex items-center space-x-3 text-xs">
+                <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cardBg border border-borderSubtle text-slate-400 font-mono">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    temp / main
+                </span>
+                <a href="./java.html" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-medium transition-all shadow-md shadow-blue-600/20 flex items-center gap-1.5">
+                    <i class="fa-solid fa-code text-[11px]"></i>
+                    <span>Open Java Lab</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-6xl w-full mx-auto p-6 sm:p-8 space-y-8">
+        
+        <!-- Hero Section -->
+        <section class="bg-panelBg border border-borderSubtle rounded-2xl p-6 sm:p-8 relative overflow-hidden shadow-2xl">
+            <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="max-w-2xl space-y-3 relative z-10">
+                <span class="inline-block px-2.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500/20 text-blue-400 tracking-wider uppercase font-mono">
+                    Workspace Explorer
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                    Program Repositories &amp; Notebooks
+                </h2>
+                <p class="text-sm text-slate-400 leading-relaxed">
+                    Direct access to all compiled coursework pages, problem statements, and source implementations inside the <code class="font-mono text-slate-200 bg-cardBg px-1.5 py-0.5 rounded text-xs">temp</code> environment.
+                </p>
+            </div>
+
+            <!-- Quick Filter Bar -->
+            <div class="mt-6 pt-6 border-t border-borderSubtle/60 flex flex-col sm:flex-row gap-3">
+                <div class="relative flex-1">
+                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-search text-xs"></i>
+                    </span>
+                    <input type="text" id="directorySearch" placeholder="Search pages, modules, or tags..." 
+                        class="w-full pl-10 pr-4 py-2.5 bg-cardBg border border-borderSubtle rounded-xl text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors">
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-slate-400 font-mono pl-1" id="fileCountBadge">Showing 2 pages</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pages Grid -->
+        <section>
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Available Modules &amp; Files</h3>
+            </div>
+
+            <div id="pagesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Dynamically rendered page cards -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-borderSubtle bg-panelBg py-5 px-6 text-xs text-slate-500">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+            <span>BNMIT Department of Information Science &amp; Engineering</span>
+            <span class="font-mono text-slate-400">Object Oriented Programming with Java</span>
+        </div>
+    </footer>
+
+    <script>
+        // List of pages present in the temp repository
+        const pagesList = [
+            {
+                title: "OOP Java - Module 1 & 2",
+                filename: "java.html",
+                category: "Java SE",
+                badge: "Active Lab",
+                icon: "fa-brands fa-java text-orange-400",
+                desc: "Complete repository covering Module 1 (Basics, Box constructors, Overloading) and Module 2 (Strings, Palindromes, Shapes inheritance).",
+                count: "13 Programs",
+                tags: ["Inheritance", "Constructors", "Strings", "Method Overloading"]
+            },
+            {
+                title: "Module Index Hub",
+                filename: "index.html",
+                category: "Navigation",
+                badge: "Current Page",
+                icon: "fa-solid fa-compass text-blue-400",
+                desc: "Root directory navigation index displaying all active modules and lab pages inside the temp workspace.",
+                count: "Root File",
+                tags: ["Dashboard", "Index", "Launcher"]
+            }
+        ];
+
+        function renderPages(items) {
+            const grid = document.getElementById('pagesGrid');
+            grid.innerHTML = '';
+
+            items.forEach(page => {
+                const isCurrent = page.filename === 'index.html';
+                const card = document.createElement('div');
+                card.className = "page-item bg-panelBg border border-borderSubtle hover:border-slate-600 rounded-xl p-5 flex flex-col justify-between transition-all duration-200 hover:-translate-y-1 shadow-lg hover:shadow-2xl group";
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-start justify-between gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-cardBg border border-borderSubtle flex items-center justify-center text-lg shadow-inner">
+                                <i class="${page.icon}"></i>
+                            </div>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${isCurrent ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'}">
+                                ${page.badge}
+                            </span>
+                        </div>
+                        
+                        <h4 class="text-base font-bold text-white group-hover:text-blue-400 transition-colors">
+                            ${page.title}
+                        </h4>
+                        
+                        <p class="text-xs font-mono text-slate-500 mt-0.5 mb-2.5">
+                            <i class="fa-regular fa-file-code mr-1"></i>${page.filename}
+                        </p>
+                        
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                            ${page.desc}
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-1.5 mb-5">
+                            ${page.tags.map(t => `<span class="text-[10px] px-2 py-0.5 rounded bg-cardBg text-slate-400 border border-borderSubtle/60">${t}</span>`).join('')}
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-borderSubtle/60 flex items-center justify-between">
+                        <span class="text-[11px] font-mono text-slate-500">${page.count}</span>
+                        <a href="./${page.filename}" ${isCurrent ? 'aria-disabled="true"' : ''} 
+                            class="inline-flex items-center gap-1.5 text-xs font-medium ${isCurrent ? 'text-slate-500 pointer-events-none' : 'text-blue-400 hover:text-blue-300'} transition-colors">
+                            <span>${isCurrent ? 'Current View' : 'Launch Page'}</span>
+                            <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform"></i>
+                        </a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            document.getElementById('fileCountBadge').textContent = `Showing ${items.length} page${items.length === 1 ? '' : 's'}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPages(pagesList);
+
+            const searchInput = document.getElementById('directorySearch');
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                const filtered = pagesList.filter(item => 
+                    item.title.toLowerCase().includes(query) ||
+                    item.filename.toLowerCase().includes(query) ||
+                    item.desc.toLowerCase().includes(query) ||
+                    item.tags.some(t => t.toLowerCase().includes(query))
+                );
+                renderPages(filtered);
+            });
+        });
+    </script>
+</body>
+</html>
