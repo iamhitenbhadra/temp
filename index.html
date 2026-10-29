@@ -1,3 +1,6 @@
+Here is the updated code integrating `ai.html` into your central hub directory page (`index.html`), updating the top navigation links and the pages list array to include the new AI / Machine Learning lab page:
+
+```html
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
@@ -70,15 +73,19 @@
                 </div>
             </div>
 
-            <!-- GitHub / Status indicators -->
+            <!-- GitHub / Status indicators & Quick Lab Launchers -->
             <div class="flex items-center space-x-3 text-xs">
                 <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cardBg border border-borderSubtle text-slate-400 font-mono">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                     temp / main
                 </span>
-                <a href="./java.html" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-medium transition-all shadow-md shadow-blue-600/20 flex items-center gap-1.5">
-                    <i class="fa-solid fa-code text-[11px]"></i>
-                    <span>Open Java Lab</span>
+                <a href="./java.html" class="px-3 py-1.5 bg-cardBg hover:bg-slate-800 border border-borderSubtle text-slate-200 rounded-lg font-medium transition-all flex items-center gap-1.5">
+                    <i class="fa-brands fa-java text-orange-400 text-[11px]"></i>
+                    <span>Java Lab</span>
+                </a>
+                <a href="./ai.html" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-medium transition-all shadow-md shadow-blue-600/20 flex items-center gap-1.5">
+                    <i class="fa-solid fa-brain text-[11px]"></i>
+                    <span>AI Lab</span>
                 </a>
             </div>
         </div>
@@ -113,7 +120,7 @@
                         class="w-full pl-10 pr-4 py-2.5 bg-cardBg border border-borderSubtle rounded-xl text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors">
                 </div>
                 <div class="flex items-center gap-2">
-                    <span class="text-xs text-slate-400 font-mono pl-1" id="fileCountBadge">Showing 2 pages</span>
+                    <span class="text-xs text-slate-400 font-mono pl-1" id="fileCountBadge">Showing 3 pages</span>
                 </div>
             </div>
         </section>
@@ -134,29 +141,39 @@
     <footer class="border-t border-borderSubtle bg-panelBg py-5 px-6 text-xs text-slate-500">
         <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
             <span>BNMIT Department of Information Science &amp; Engineering</span>
-            <span class="font-mono text-slate-400">Object Oriented Programming with Java</span>
+            <span class="font-mono text-slate-400">Object Oriented Programming &amp; AI Labs</span>
         </div>
     </footer>
 
     <script>
-        // List of pages present in the temp repository
+        // List of pages present in the temp repository including ai.html
         const pagesList = [
             {
                 title: "OOP Java - Module 1 & 2",
                 filename: "java.html",
                 category: "Java SE",
-                badge: "Active Lab",
+                badge: "Java Lab",
                 icon: "fa-brands fa-java text-orange-400",
                 desc: "Complete repository covering Module 1 (Basics, Box constructors, Overloading) and Module 2 (Strings, Palindromes, Shapes inheritance).",
                 count: "13 Programs",
                 tags: ["Inheritance", "Constructors", "Strings", "Method Overloading"]
             },
             {
+                title: "AI & Python Lab Codes",
+                filename: "ai.html",
+                category: "Artificial Intelligence",
+                badge: "AI Lab",
+                icon: "fa-solid fa-brain text-blue-400",
+                desc: "Python scripts and TensorFlow pipelines featuring NLTK text processing, rule-based assistants, loan decision logic, and CNN image classification.",
+                count: "5 Programs & Scripts",
+                tags: ["Python", "TensorFlow", "NLTK", "Machine Learning"]
+            },
+            {
                 title: "Module Index Hub",
                 filename: "index.html",
                 category: "Navigation",
                 badge: "Current Page",
-                icon: "fa-solid fa-compass text-blue-400",
+                icon: "fa-solid fa-compass text-emerald-400",
                 desc: "Root directory navigation index displaying all active modules and lab pages inside the temp workspace.",
                 count: "Root File",
                 tags: ["Dashboard", "Index", "Launcher"]
@@ -233,3 +250,5 @@
     </script>
 </body>
 </html>
+
+```
