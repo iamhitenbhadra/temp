@@ -137,12 +137,17 @@
                         id: "p1",
                         title: "1. Text Tokenization, Frequency & Bar Chart",
                         filename: "text_token_freq.py",
-                        desc: "Tokenizes input text, removes English stop words, computes word frequencies using Counter, and plots a matplotlib bar chart.",
+                        desc: "Tokenizes input text, downloads necessary NLTK datasets, removes English stop words, computes word frequencies, and plots a matplotlib bar chart.",
                         code: `import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from collections import Counter
 import matplotlib.pyplot as plt
+
+# Download required NLTK data components
+nltk.download('punkt')
+nltk.download('punkt_tab')
+nltk.download('stopwords')
 
 text = """Artificial Intelligence is used in healthcare
 education transportation machine learning helps
